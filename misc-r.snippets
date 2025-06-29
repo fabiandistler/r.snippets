@@ -1,0 +1,217 @@
+# Misc
+
+snippet rr "Refactor"
+	`%refactor%` <- refactor::`%refactor%`
+
+## pak
+snippet pp "Pak install package"
+	pak::pak("${1:package}")
+	
+snippet pakd "pak::pkg_deps() - Show dependencies of a package"
+	pak::pkg_deps("${1:pkg}")
+
+snippet pakdt "pak::pkg_deps_tree() - Show dependency tree of a package"
+	pak::pkg_deps_tree("${1:pkg}")
+
+snippet pakde "pak::pkg_deps_explain() - Explain why a package is needed"
+	pak::pkg_deps_explain("${1:pkg}")
+
+snippet pakl "pak::local_deps() - Show dependencies of local package"
+	pak::local_deps()
+
+snippet pakle "pak::local_deps_explain() - Explain local dependency reasons"
+	pak::local_deps_explain()
+
+snippet pakid "pak::local_install_deps() - Install local package dependencies"
+	pak::local_install_deps()
+
+
+snippet fun "Function skeleton with try catch and error print"
+	${1:name} <- function(${2:input}) {
+		tryCatch(
+			expr = {
+				${0}
+				return(${3:output})
+			},
+			error = function(e){
+				print(
+				sprintf("An error occurred in ${1:name} at %s : %s",
+				Sys.time(),
+				e)
+				)
+			})
+	}
+
+snippet func "Compile function for speed"
+	${1:compiled_fun} <- compiler::cmpfun(${2:fun_name})
+
+snippet ab "Autobrowse function"
+	${1:function_to_browse} <- purrr::auto_browse(${1:function_to_browse})
+
+snippet mm "Cache function"
+	${1:function_to_cache} <- memoise::memoise(${1:function_to_cache})
+
+# Prints output to cursor need to run with tab+shift
+# !rnorm(5)<Shift-Tab>
+snippet !
+	`r eval(parse(text = "$$"))`
+
+snippet lib
+	library(${1:package})
+
+snippet req
+	require(${1:package})
+
+snippet src
+	source("${1:file.R}")
+
+snippet ret
+	return(${1:code})
+
+snippet ts "Time stamp"
+	`r paste("#", date(), "------------------------------\n")`
+
+snippet mat
+	matrix(${1:data}, nrow = ${2:rows}, ncol = ${3:cols})
+
+## btw
+snippet btw "Describe R objects for LLM context"
+	btw::btw(${1:object}, ${2:clipboard = TRUE})
+
+snippet btwcl "Create btw-enhanced LLM chat client"
+	ch <- btw::btw_client(${1:context_objects})
+	ch$chat("${2:your_question}")
+
+snippet btwt "Add btw tools to existing chat"
+	chat$set_tools(c(chat$get_tools(), btw::btw_tools()))
+
+snippet btwcf "Describe current file/selection for LLM"
+	btw::btw("${1:@current_file}")
+
+snippet btwp "Describe R package documentation for LLM"
+	btw::btw("{${1:package_name}}")
+
+snippet btwh "Include help page in LLM context"
+	btw::btw("?${1:function_name}")
+
+
+# OOP
+
+## R6
+snippet r6
+	${1:ClassName} <- R6::R6Class("${1:ClassName}",
+		public = list(
+			${2:field1} = ${3:default1},
+			${4:field2} = ${5:default2},
+
+			initialize = function(${6:arg1}, ${7:arg2} = ${8:default2}) {
+			  stopifnot(is.${9:type1}(${6:arg1}), length(${6:arg1}) == 1)
+			  stopifnot(is.${10:type2}(${7:arg2}), length(${7:arg2}) == 1)
+			  self${11:\$}${2:field1} <- ${6:arg1}
+			  self${12:\$}${4:field2} <- ${7:arg2}
+			},
+
+			print = function(...) {
+			  cat("${1:ClassName}:\n")
+			  cat("  ${2:field1}: ", self${13:\$}${2:field1}, "\n", sep = "")
+			  cat("  ${4:field2}: ", self${14:\$}${4:field2}, "\n", sep = "")
+			  invisible(self)
+			}
+		)
+	)
+
+## S3
+snippet s3c "Constructor for S3 class - Should have one argument for base object and one for each attribute and check type"
+	new_${1:class} <- function(x = double(), att = integer()) {
+	  stopifnot(is.double(x))
+	  stopifnot(is.integer(att))
+
+	  structure(
+	    x,
+	    class = "${1:class}",
+	    att = att
+	  )
+	}
+
+## S4
+snippet sg
+	setGeneric("${1:generic}", function(${2:x, ...}) {
+		standardGeneric("${1:generic}")
+	})
+
+snippet sm
+	setMethod("${1:generic}", ${2:class}, function(${2:x, ...}) {
+		${0}
+	})
+
+snippet sc
+	setClass("${1:Class}", slots = c(${2:name = "type"}))
+
+
+# Conditionals
+
+snippet if
+	if (${1:condition}) {
+		${0}
+	}
+
+snippet el
+	else {
+		${0}
+	}
+
+snippet ei
+	else if (${1:condition}) {
+		${0}
+	}
+
+# Loops
+
+snippet for
+	for (${1:variable} in seq_along(${2:vector})) {
+		${0}
+	}
+
+snippet while
+	while (${1:condition}) {
+		${0}
+	}
+
+snippet switch
+	switch (${1:object},
+		${2:case} = ${3:action}
+	)
+
+
+# Shiny
+
+snippet shinyapp
+	library(shiny)
+
+	ui <- fluidPage(
+	  ${0}
+	)
+
+	server <- function(input, output, session) {
+
+	}
+
+	shinyApp(ui, server)
+
+snippet shinymod
+	${1:name}UI <- function(id) {
+	  ns <- NS(id)
+	  tagList(
+		${0}
+	  )
+	}
+
+	${1:name}Server <- function(id) {
+	  moduleServer(
+	    id,
+	    function(input, output, session) {
+
+	    }
+	  )
+	}
+

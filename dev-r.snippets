@@ -1,0 +1,146 @@
+# Package dev
+
+snippet aa "Update DESCRIPTION"
+	attachment::att_amend_desc()
+
+snippet ll "lint current file"
+	lintr:::addin_lint()
+
+snippet ff
+	flir::fix(path = rstudioapi::getSourceEditorContext()\$path)
+
+snippet pt "Dependency tree"
+	pak::pkg_deps_tree("${1:package_name}")
+
+## Handlers
+snippet message
+	cli::cli_inform("${1:message}", call = NULL)
+
+snippet stop
+	cli::cli_abort("${1:message}", call = NULL)
+
+snippet progress
+	${1:dt}[, {
+		for (i in cli::cli_progress_along(.I)) {
+			${2:# Code for .SD[i] or .I[i]}
+		}
+	}, by = ${3:grp}]
+
+
+## Plotters
+snippet pc "Network plot of package"
+	pkgnet::CreatePackageReport("${1:package}")
+
+snippet pd "Package deps"
+	library("${1:package}")
+	pkgdepR::deps("${1:package}") |>
+		plot()
+
+snippet fv "UML of function"
+	flow::flow_view(${1:function})
+
+snippet fd "Who is using function"
+	flow::flow_view_deps(${1:function})
+
+## renv
+snippet rs "Renv status"
+	renv::status()
+
+## testthat
+snippet tt "Create test"
+	test_that("${1:description}", {
+	  $0
+	})
+
+snippet td "Describe that"
+	describe("${1:function}", {
+	  it("${2:action}", {
+	    $0
+	  })
+	})
+
+snippet tc
+	devtools::test_coverage_active_file()
+
+snippet mock
+	testthat::local_mocked_bindings()
+
+### xpectr
+snippet xf "Generate testthat tests for function arguments"
+	xpectr::gxs_function(
+		fn = ${1:function_name},
+		args_values = list(
+			"${2:arg1}" = list(${3:value1, value2}),
+			"${4:arg2}" = list(${5:value1, value2})
+		),
+		indentation = 2,
+		copy_env = FALSE
+	)
+
+snippet xc "Capture and test side effects (errors/warnings/messages)"
+	side_effects_${1:12345} <- xpectr::capture_side_effects(
+		${2:expression},
+		reset_seed = TRUE
+	)
+	expect_equal(
+		xpectr::strip(side_effects_${1:12345}[['warnings']]),
+		xpectr::strip(${3:"expected warning"}),
+		fixed = TRUE
+	)
+	expect_equal(
+		xpectr::strip(side_effects_${1:12345}[['messages']]),
+		xpectr::strip(${4:"expected message"}),
+		fixed = TRUE
+	)
+
+snippet xs "Suppress warnings/messages and test clean output"
+	output_${1:12345} <- xpectr::suppress_mw(${2:expression})
+	expect_equal(
+		output_${1:12345},
+		${3:expected_output},
+		${4:tolerance = 1e-4}
+	)
+
+
+## benchmarking
+snippet mm "Benchmark expressions"
+	microbenchmark::microbenchmark(${1:expression1}, ${2:expression2})
+
+## assertions
+snippet assert_int
+	checkmate::assert_int(${1:x})
+
+snippet assert_double
+	checkmate::assert_double(${1:x}, any.missing = FALSE, all.missing = FALSE)
+
+snippet assert_character
+	checkmate::assert_character(${1:x}, any.missing = FALSE, all.missing = FALSE)
+
+snippet assert_logical
+	checkmate::assert_logical(${1:x}, any.missing = FALSE, all.missing = FALSE)
+
+snippet assert_data_table
+	checkmate::assert_data_table(${1:x}, any.missing = FALSE, all.missing = FALSE)
+
+snippet assert_list
+	checkmate::assert_list(${1:x}, any.missing = FALSE, all.missing = FALSE)
+
+snippet assert_function
+	checkmate::assert_function(${1:x})
+
+snippet assert_choice
+	checkmate::assert_choice(${1:x}, choices = c(${2:"option1"}, ${3:"option2"}))
+
+snippet assert_subset
+	checkmate::assert_subset(${1:x}, choices = c(${2:"option1"}, ${3:"option2"}))
+
+snippet assert_file_exists
+	checkmate::assert_file_exists(${1:"/path/to/file"})
+
+snippet assert_directory_exists
+	checkmate::assert_directory_exists(${1:"/path/to/directory"})
+
+snippet qassert "Compact assertion using format string syntax"
+	checkmate::qassert(${1:x}, "${2:format-string}")
+
+
