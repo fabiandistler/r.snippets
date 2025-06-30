@@ -1,0 +1,235 @@
+# RStudio Snippets for Tidyverse Error Messages Style Guide
+# Optimized and Generic Version
+
+# =============================================================================
+# CORE PATTERN - Most flexible cli::cli_abort structure
+# =============================================================================
+
+snippet ca "cli abort - flexible error with all options"
+	cli::cli_abort(c(
+		# Main problem statement (always end with period)
+		"${1:What went wrong}.",
+		
+		# Use "x" for problems/issues (can have multiple)
+		"x" = "${2:Specific issue or what was wrong}",
+		#"x" = "Another issue if needed",
+		
+		# Use "i" for context/info (usually one, sometimes more)
+		"i" = "${3:Additional context or information}",
+		
+		# Use "i" with question mark for hints
+		#"i" = "Did you mean ...?",
+		
+		# For truncated lists add:
+		#"... and {n} more problems"
+	), 
+	# Add call for function location (optional)
+	call = ${4:caller_env()}
+	)
+
+# =============================================================================
+# SIMPLE PATTERNS - For common quick cases
+# =============================================================================
+
+snippet cas "cli abort - simple one-liner"
+	cli::cli_abort("${1:Subject} ${2:must be|can't} ${3:expectation}${4:, not actual}.")
+
+snippet cah "cli abort - with hint question"
+	cli::cli_abort(c(
+		"${1:Problem statement}.",
+		"i" = "Did you ${2:mean/forget to} ${3:suggestion}?"
+	))
+
+# =============================================================================
+# VALIDATION PATTERNS - For argument/type checking
+# =============================================================================
+
+snippet cav "cli abort - validation with smart type detection"
+	cli::cli_abort(c(
+		# Choose pattern based on clarity:
+		# Clear expectation: "{.arg x} must be Y, not Z"
+		# Unclear expectation: "Can't use {.arg x} here"
+		"{.arg ${1:argument}} ${2:must be|must have|can't be} ${3:expected}.",
+		
+		# Show what was actually provided
+		"x" = "You supplied {${4:.obj_type_friendly {$1}|.cls {class($1)[1]}|.val {$1}}}.",
+		
+		# Optional: Add hint for common mistakes
+		#"i" = "Did you mean {.code correct_syntax}?"
+	))
+
+snippet cavs "cli abort - size/length validation"
+	cli::cli_abort(c(
+		"${1:Objects|Columns} must have compatible ${2:sizes|lengths}.",
+		# List each size issue
+		"x" = "${3:Size|Length} {${4:actual1}}: ${5:Description1}.",
+		"x" = "${6:Size|Length} {${7:actual2}}: ${8:Description2}.",
+		# Standard recycling message if applicable
+		"i" = "Only values of ${9:size|length} one are recycled."
+	))
+
+# =============================================================================
+# DATA FRAME / COLUMN PATTERNS
+# =============================================================================
+
+snippet cad "cli abort - data/column operations"
+	cli::cli_abort(
+		# Common patterns:
+		# "Can't find column {.field col} in {.arg .data}"
+		# "Column {.field col} must be numeric"
+		# "Can't select columns that don't exist"
+		"Can't ${1:find|use|select} ${2:column} {.field ${3:name}} ${4:in {.arg .data}}."
+	)
+
+# =============================================================================
+# FUNCTION REQUIREMENT PATTERNS
+# =============================================================================
+
+snippet caf "cli abort - function requirements"
+	cli::cli_abort(
+		# Pattern: function + requirement
+		"{.fn ${1:function_name}} ${2:requires|must have|can't work with} ${3:requirement}."
+	)
+
+snippet cafm "cli abort - missing requirements"
+	cli::cli_abort(
+		"{.fn ${1:function}} ${2:requires the following missing|must have} ${3:aesthetics}: {.field ${4:y}}."
+	)
+
+# =============================================================================
+# ADVANCED MARKUP - For rich formatting
+# =============================================================================
+
+snippet cam "cli abort - with inline markup helpers"
+	cli::cli_abort(c(
+		"${1:Problem with} {.${2:field|arg|fn|cls|val|code|path} ${3:content}}.",
+		
+		# Common markup patterns:
+		# {.field column_name} - for data frame columns
+		# {.arg argument} - for function arguments  
+		# {.fn function} - for function names
+		# {.cls class_name} - for R classes
+		# {.val value} - for specific values
+		# {.code code} - for code snippets
+		# {.path filepath} - for file paths
+		# {.or c("a", "b", "c")} - for "a, b, or c"
+		# {.obj_type_friendly x} - for user-friendly type description
+		
+		"x" = "${4:Use markup in error details too}"
+	))
+
+# =============================================================================
+# PLURALIZATION - For international support
+# =============================================================================
+
+snippet cap "cli abort - with pluralization"
+	cli::cli_abort(
+		ngettext(
+			${1:count_variable},
+			# Singular message
+			"${2:One item} ${3:message}.",
+			# Plural message  
+			"${4:{count_variable} items} ${3:message}."
+		)
+	)
+
+# =============================================================================
+# ERROR CHAINING - For nested errors
+# =============================================================================
+
+snippet cac "cli abort - with error chaining"
+	cli::cli_abort(
+		"${1:High-level user-friendly message}.",
+		# Pass lower-level error as parent
+		parent = ${2:caught_error},
+		call = ${3:caller_env()}
+	)
+
+# =============================================================================
+# COMMON ERROR TEMPLATES
+# =============================================================================
+
+snippet catype "cli abort - type mismatch error"
+	cli::cli_abort(c(
+		"{.arg ${1:x}} must be ${2:a numeric vector}.",
+		"x" = "You supplied {.obj_type_friendly {${1}}}."
+	))
+
+snippet cacol "cli abort - column not found"
+	cli::cli_abort("Can't find column {.field ${1:column_name}} in {.arg ${2:.data}}.")
+
+snippet capipe "cli abort - pipe vs plus hint"
+	cli::cli_abort(c(
+		"${1:Problem with piping}.",
+		"i" = "Did you use {.code %>%} or {.code |>} instead of {.code +}?"
+	))
+
+snippet caempty "cli abort - empty input"
+	cli::cli_abort("Must supply at least one ${1:item}, e.g. {.code ${2:~example}}.")
+
+# =============================================================================
+# STYLE GUIDE REMINDERS (as comments)
+# =============================================================================
+
+snippet castyle "cli abort - style guide template with reminders"
+	cli::cli_abort(c(
+		# PROBLEM STATEMENT RULES:
+		# - Start with general problem
+		# - Use sentence case
+		# - End with period
+		# - Use "must" when expectation is clear
+		# - Use "can't" when expectation is unclear
+		# - Keep under 80 characters (use bullets for longer)
+		"${1:Problem statement}.",
+		
+		# ERROR DETAILS:
+		# - Use "x" bullets for what went wrong
+		# - Use "i" bullets for context
+		# - Keep bullets short and sweet
+		# - Reveal location/name/content of problem
+		# - Don't blame specific argument unless certain
+		"x" = "${2:What went wrong}",
+		
+		# HINTS (optional):
+		# - Only for common, clear mistakes
+		# - Always end with question mark
+		# - Use "i" bullet
+		# - Suggest specific fix
+		"i" = "Did you ${3:suggestion}?"
+		
+		# FORMATTING:
+		# - {.arg x} for arguments
+		# - {.field x} for columns  
+		# - {.fn x} for functions
+		# - {.cls x} for classes
+		# - {.val x} for values
+		# - {.code x} for code
+		# - {.path x} for paths
+		# - Backticks avoided (use markup instead)
+		
+		# TRUNCATION:
+		# - Show max 5 issues
+		# - Then "... and {n} more problems"
+	))
+
+# =============================================================================
+# UTILITY SNIPPETS
+# =============================================================================
+
+snippet caobj "cli abort - obj_type_friendly helper"
+	{.obj_type_friendly {${1:variable}}}
+
+snippet caor "cli abort - or list helper"
+	{.or {.val ${1:c("option1", "option2", "option3")}}}
+
+snippet camark "cli abort - markup reference"
+	# Inline markup reference:
+	# {.field column} - data frame columns
+	# {.arg argument} - function arguments
+	# {.fn function} - function names  
+	# {.cls class} - R classes
+	# {.val value} - specific values
+	# {.code code} - code snippets
+	# {.path filepath} - file paths
+	# {.or vector} - "a, b, or c" lists
+	# {.obj_type_friendly x} - friendly type names
