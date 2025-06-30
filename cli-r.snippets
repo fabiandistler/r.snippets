@@ -18,13 +18,13 @@ snippet ca "cli abort - flexible error with all options"
 		"i" = "${3:Additional context or information}",
 		
 		# Use "i" with question mark for hints
-		#"i" = "Did you mean ...?",
+		#"i" = "Did you mean ...?"
 		
 		# For truncated lists add:
 		#"... and {n} more problems"
 	), 
-	# Add call for function location (optional)
-	call = ${4:caller_env()}
+	# Add call for function location (for helper functions)
+	call = ${4:rlang::caller_env()}
 	)
 
 # =============================================================================
