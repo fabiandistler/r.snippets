@@ -1,20 +1,13 @@
 # data.table
-# ─────────────────────────────────────────────────────────────
-# setkey() / setorder()
-snippet dtkey
-# setkey: sort & set index for fast joins/filters
+snippet dtkey "sort & set index for fast joins/filters"
 	data.table::setkey(${1:DT}, ${2:col1}${3:, ${4:col2}})
 	${0}
 
-snippet dtorder
-# setorder: sort without changing key
+snippet dtorder "sort without changing key"
 	data.table::setorder(${1:DT}, ${2:-col})
 	${0}
 
-# ─────────────────────────────────────────────────────────────
-# Aggregation & Grouping
-snippet dtagg
-# group aggregation: sum, mean, .N, uniqueN
+snippet dtagg "group aggregation: sum, mean, .N, uniqueN"
 	${1:DT}[${2:cond}${3:, }, .(
 	  Sum = base::sum(${4:col}, na.rm = TRUE),
 	  Mean = base::mean(${4:col}, na.rm = TRUE),
@@ -23,59 +16,41 @@ snippet dtagg
 	), by = ${5:group}]
 	${0}
 
-# ─────────────────────────────────────────────────────────────
-# Joins (Inner, Left, Non-equi, Rolling)
-snippet dtinner
-# inner join: matches only (nomatch=0)
+snippet dtjinner "inner join: matches only"
 	${1:DT1}[${2:DT2}, on = .(${3:key}), nomatch = 0]
 	${0}
 
-snippet dtleft
-# left join: all from DT1, matching from DT2
+snippet dtjleft "left join: all from DT1, matching from DT2"
 	${1:DT1}[${2:DT2}, on = .(${3:key})]
 	${0}
 
-snippet dtnonequi
-# non-equi join: range-based matching
+snippet dtjnonequi "non-equi join: range-based matching"
 	data.table::setkey(${1:DT2}, ${2:start}, ${3:end})
 	${1:DT2}[${4:DT1}, on = .(${2:start} <= ${5:val}, ${3:end} >= ${5:val}), nomatch = 0]
 	${0}
 
-snippet dtroll
-# rolling join: match by nearest previous (or next) time
+snippet dtjroll "rolling join: match by nearest previous (or next) time"
 	data.table::setkey(${1:DT}, ${2:time})
 	${1:DT}[${3:queryDT}, on = .(${2:time}), roll = ${4:TRUE}]
 	${0}
 
-# ─────────────────────────────────────────────────────────────
-# Utilities
-snippet dtlike
-# pattern matching: %like%, %ilike%
+snippet dtlike "pattern matching: %like%, %ilike%"
 	${1:DT}[${2:col} %like% "${3:pattern}"]
 
 snippet dtbetween
-# between: filter a <= x <= b
 	${1:DT}[data.table::between(${2:col}, ${3:a}, ${4:b})]
 
-snippet dtif
-# fast conditional assignment: fifelse
+snippet dtif "fast conditional assignment"
 	${1:DT}[, ${4:newcol} := data.table::fifelse(${2:col} > ${3:thresh}, "${5:yes}", "${6:no}")]
 
-snippet dtunique
-# uniqueN: fast distinct count
+snippet dtunique "fast distinct count"
 	${1:DT}[, .(Unique = data.table::uniqueN(${2:col}))]
 
-# ─────────────────────────────────────────────────────────────
-# Copy & Debugging
-snippet dtcopy
-# deep copy & affected rows message
+snippet dtcopy "deep copy & affected rows message"
 	${1:copyDT} <- data.table::copy(${2:DT})
 	${0}
 
-# ─────────────────────────────────────────────────────────────
-# Cross Join (CJ)
-snippet dtcj
-# CJ: cartesian product of vectors
+snippet dtcj "cartesian product of vectors"
 	${1:res} <- data.table::CJ(${2:v1}, ${3:v2}${4:, sorted = TRUE, unique = TRUE})
 	${0}
 
