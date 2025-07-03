@@ -1,0 +1,276 @@
+# targets package snippets
+
+# ─────────────────────────────────────────────────────────────
+# Setup & Configuration
+snippet tarinit "Initialize targets project"
+	targets::use_targets()
+
+# ─────────────────────────────────────────────────────────────
+# Target Definition
+snippet tar "Basic target"
+	tar_target(
+		name = ${1:target_name},
+		command = ${2:expression}
+	)
+
+snippet tarfile "File target"
+	tar_target(
+		name = ${1:file_target},
+		command = ${2:"path/to/file.csv"},
+		format = "file"
+	)
+
+snippet tarfiles "Multiple file target"
+	tar_target(
+		name = ${1:files_target},
+		command = ${2:c("file1.csv", "file2.csv")},
+		format = "file"
+	)
+
+# ─────────────────────────────────────────────────────────────
+# Dynamic Branching
+snippet tarmap "Map over single target"
+	tar_target(
+		name = ${1:mapped_target},
+		command = ${2:expression_using_}${3:upstream},
+		pattern = map(${3:upstream})
+	)
+
+snippet tarmaps "Map over multiple targets"
+	tar_target(
+		name = ${1:mapped_target},
+		command = ${2:expression},
+		pattern = map(${3:target1}, ${4:target2})
+	)
+
+snippet tarcross "Cross product branching"
+	tar_target(
+		name = ${1:crossed_target},
+		command = ${2:expression},
+		pattern = cross(${3:target1}, ${4:target2})
+	)
+
+snippet tarhead "Head branching pattern"
+	tar_target(
+		name = ${1:subset_target},
+		command = ${2:expression},
+		pattern = head(${3:upstream}, n = ${4:10})
+	)
+
+snippet tarsample "Sample branching pattern"
+	tar_target(
+		name = ${1:sampled_target},
+		command = ${2:expression},
+		pattern = sample(${3:upstream}, n = ${4:100})
+	)
+
+# ─────────────────────────────────────────────────────────────
+# Pipeline Execution
+snippet tarmake "Run pipeline"
+	tar_make()
+
+snippet tarmakep "Run specific targets"
+	tar_make(names = c(${1:"target1", "target2"}))
+
+snippet tarmakecrew "Run with crew workers"
+	tar_make(use_crew = TRUE)
+
+snippet tarmakef "Run with future"
+	tar_make_future(workers = ${1:4})
+
+snippet tarmakec "Run with clustermq"
+	tar_make_clustermq(workers = ${1:4})
+
+# ─────────────────────────────────────────────────────────────
+# Reading Results
+snippet tarread "Read single target"
+	tar_read(${1:target_name})
+
+snippet tarreadb "Read specific branches"
+	tar_read(${1:target_name}, branches = ${2:1:3})
+
+snippet tarload "Load targets into environment"
+	tar_load(${1:target_name})
+
+snippet tarloadm "Load multiple targets"
+	tar_load(c(${1:"target1", "target2"}))
+
+snippet tarloade "Load everything"
+	tar_load_everything()
+
+# ─────────────────────────────────────────────────────────────
+# Inspection & Visualization
+snippet tarvis "Visualize pipeline network"
+	tar_visnetwork(
+		names = ${1:NULL},
+		outdated = ${2:TRUE},
+		label = "${3:time}",
+		level_separation = ${4:100}
+	)
+
+snippet tarman "Show manifest"
+	tar_manifest(
+		names = ${1:NULL},
+		fields = tidyselect::any_of(c("name", "command", "pattern", "description"))
+	)
+
+snippet tarout "Check outdated targets"
+	tar_outdated()
+
+snippet tarprog "Show progress"
+	tar_progress()
+
+snippet tarmeta "Get metadata"
+	tar_meta(
+		names = ${1:NULL},
+		fields = ${2:NULL}
+	)
+
+snippet tarsitrep "Situation report"
+	tar_sitrep()
+
+snippet tarvalidate "Validate pipeline"
+	tar_validate()
+
+# ─────────────────────────────────────────────────────────────
+# Cleanup & Management
+snippet tardelete "Delete specific targets"
+	tar_delete(names = c(${1:"target1", "target2"}))
+
+snippet tardestroy "Remove entire store"
+	tar_destroy()
+
+snippet tarprune "Remove outdated objects"
+	tar_prune()
+
+snippet targc "Run garbage collection"
+	tar_invalidate(names = c(${1:"target_name"}))
+
+# ─────────────────────────────────────────────────────────────
+# Debugging & Development
+snippet tarworkspace "Load target workspace for debugging"
+	tar_workspace(${1:target_name})
+
+snippet tardebug "Set debug mode for target"
+	tar_option_set(debug = "${1:target_name}")
+
+snippet tarwatch "Watch pipeline progress"
+	tar_watch(
+		seconds = ${1:10},
+		outdated = ${2:TRUE},
+		targets_only = ${3:TRUE}
+	)
+
+snippet tarbranches "Get branch names"
+	tar_branches(${1:target_name})
+
+snippet tarpattern "Get pattern info"
+	tar_pattern(${1:target_name})
+
+# ─────────────────────────────────────────────────────────────
+# Resources & Performance
+snippet tarresources "Set target resources"
+	resources = list(
+		ncpus = ${1:2},
+		memory = ${2:1000},
+		custom = list(${3})
+	)
+
+snippet tarresourcescrew "Crew-specific resources"
+	resources = tar_resources(
+		crew = tar_resources_crew(seconds_timeout = ${1:600})
+	)
+
+# ─────────────────────────────────────────────────────────────
+# tarchetypes Integration
+snippet targroup "Group by columns (tarchetypes)"
+	tar_group_by(
+		name = ${1:grouped_data},
+		command = ${2:data},
+		${3:grouping_column}
+	)
+
+snippet tarmap2 "Map with custom names (tarchetypes)"
+	tar_map(
+		values = tibble::tibble(
+			${1:param1} = ${2:c("a", "b", "c")},
+			${3:param2} = ${4:c(1, 2, 3)}
+		),
+		tar_target(
+			name = ${5:target_name},
+			command = ${6:expression_using_params}
+		)
+	)
+
+snippet tarrender "Render Rmd document (tarchetypes)"
+	tar_render(
+		name = ${1:report},
+		path = "${2:report.Rmd}",
+		params = list(${3})
+	)
+
+snippet tarquarto "Render Quarto document (tarchetypes)"
+	tar_quarto(
+		name = ${1:report},
+		path = "${2:report.qmd}",
+		execute_params = list(${3})
+	)
+
+# ─────────────────────────────────────────────────────────────
+# Common Patterns
+snippet tardata "Data loading pattern"
+	tar_target(
+		name = ${1:raw_data},
+		command = ${2:data.table::fread}(${3:file_path}),
+		format = "${4:qs}"
+	)
+
+snippet tarmodel "Model fitting pattern"
+	tar_target(
+		name = ${1:model},
+		command = {
+			${2:lm}(${3:formula}, data = ${4:prepared_data})
+		}
+	)
+
+snippet tarplot "Plot creation pattern"
+	tar_target(
+		name = ${1:plot},
+		command = {
+			ggplot2::ggplot(${2:data}, ggplot2::aes(${3})) +
+				${4:geom_point}()
+		}
+	)
+
+snippet tarsave "Save output pattern"
+	tar_target(
+		name = ${1:output_file},
+		command = {
+			${2:ggsave}("${3:output.png}", ${4:plot_object})
+			"${3:output.png}"
+		},
+		format = "file"
+	)
+
+# ─────────────────────────────────────────────────────────────
+# Repository Management
+snippet tarmetasync "Sync metadata to cloud"
+	tar_meta_sync(
+		upload = ${1:TRUE},
+		download = ${2:TRUE},
+		repository = "${3:aws}"
+	)
+
+snippet tarmetaupload "Upload metadata"
+	tar_meta_upload(
+		repository = "${1:aws}",
+		metadata = ${2:TRUE},
+		progress = ${3:TRUE}
+	)
+
+snippet tarmetadownload "Download metadata"
+	tar_meta_download(
+		repository = "${1:aws}",
+		metadata = ${2:TRUE},
+		progress = ${3:TRUE}
+	)
