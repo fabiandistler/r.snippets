@@ -1,0 +1,148 @@
+# furrr - Parallel processing with future and purrr
+# ─────────────────────────────────────────────────────────────
+
+# Basic parallel mapping
+snippet furmap "Parallel map with future_map"
+	furrr::future_map(${1:.x}, ${2:function}, ${3:.options = furrr::furrr_options(seed = TRUE)})
+
+snippet furmap2 "Parallel map2 with future_map2"
+	furrr::future_map2(${1:.x}, ${2:.y}, ${3:function}, ${4:.options = furrr::furrr_options(seed = TRUE)})
+
+snippet furpmap "Parallel pmap with future_pmap"
+	furrr::future_pmap(${1:list(.x = .x, .y = .y)}, ${2:function}, ${3:.options = furrr::furrr_options(seed = TRUE)})
+
+snippet furmapdt "Parallel map to data.table with future_map + rbindlist"
+	${1:result} <- furrr::future_map(${2:.x}, ${3:function}, ${4:.options = furrr::furrr_options(seed = TRUE)})
+	data.table::rbindlist(${1:result})
+
+# Parallel walking (side effects)
+snippet furwalk "Parallel walk with future_walk"
+	furrr::future_walk(${1:.x}, ${2:function}, ${3:.options = furrr::furrr_options(seed = TRUE)})
+
+snippet furwalk2 "Parallel walk2 with future_walk2"
+	furrr::future_walk2(${1:.x}, ${2:.y}, ${3:function}, ${4:.options = furrr::furrr_options(seed = TRUE)})
+
+snippet furpwalk "Parallel pwalk with future_pwalk"
+	furrr::future_pwalk(${1:list(.x = .x, .y = .y)}, ${2:function}, ${3:.options = furrr::furrr_options(seed = TRUE)})
+
+# Parallel modifying
+snippet furmodify "Parallel modify with future_modify"
+	furrr::future_modify(${1:.x}, ${2:function}, ${3:.options = furrr::furrr_options(seed = TRUE)})
+
+snippet furmodifyat "Parallel modify_at with future_modify_at"
+	furrr::future_modify_at(${1:.x}, ${2:.at}, ${3:function}, ${4:.options = furrr::furrr_options(seed = TRUE)})
+
+# Future options configuration
+snippet furopts "furrr_options configuration"
+	furrr::furrr_options(
+		seed = ${1:TRUE},
+		globals = ${2:TRUE},
+		packages = ${3:c("data.table")},
+		lazy = ${4:TRUE},
+		scheduling = ${5:1.0}
+	)
+
+snippet furmulti "Multisession plan with workers"
+	future::plan(future::multisession, workers = ${1:parallel::detectCores() - 1})
+	${2:# Your parallel code here}
+	future::plan(future::sequential)
+
+# Progress bar integration
+snippet furprogress "Parallel processing with progress bar"
+	progressr::with_progress({
+		${1:p} <- progressr::progressor(along = ${2:.x})
+		furrr::future_map(${2:.x}, function(${3:x}) {
+			${1:p}(sprintf("Processing %s", ${3:x}))
+			${4:# Your function body}
+		}, .options = furrr::furrr_options(seed = TRUE))
+	})
+
+# Error handling
+snippet furerror "Parallel processing with error handling"
+	furrr::future_map(${1:.x}, function(${2:x}) {
+		tryCatch({
+			${3:# Your function body}
+		}, error = function(e) {
+			warning(sprintf("Error processing %s: %s", ${2:x}, e$message))
+			return(${4:NA})
+		})
+	}, .options = furrr::furrr_options(seed = TRUE))
+
+# Memory efficient processing
+snippet furmemeff "Memory efficient parallel processing"
+	# Process in chunks to manage memory
+	${1:chunk_size} <- ${2:100}
+	${3:chunks} <- split(${4:.x}, ceiling(seq_along(${4:.x})/${1:chunk_size}))
+	
+	${5:results} <- furrr::future_map(${3:chunks}, function(${6:chunk}) {
+		furrr::future_map(${6:chunk}, ${7:function}, .options = furrr::furrr_options(seed = TRUE))
+	}, .options = furrr::furrr_options(seed = TRUE))
+	
+	data.table::rbindlist(unlist(${5:results}, recursive = FALSE))
+
+# Data.table integration
+snippet furdtgroup "Parallel processing by data.table groups"
+	${1:DT_list} <- split(${2:DT}, by = "${3:group_col}")
+	
+	${4:results} <- furrr::future_map(${1:DT_list}, function(${5:dt_subset}) {
+		${5:dt_subset}[, ${6:new_col} := ${7:computation}]
+		return(${5:dt_subset})
+	}, .options = furrr::furrr_options(seed = TRUE, packages = "data.table"))
+	
+	data.table::rbindlist(${4:results})
+
+# Package development integration
+snippet furtest "Test parallel function in package"
+	test_that("${1:function_name} works in parallel", {
+		testthat::skip_on_cran()
+		
+		future::plan(future::multisession, workers = 2)
+		on.exit(future::plan(future::sequential))
+		
+		${2:result} <- furrr::future_map(${3:test_data}, ${1:function_name})
+		
+		expect_equal(length(${2:result}), length(${3:test_data}))
+		expect_true(all(sapply(${2:result}, ${4:validation_function})))
+	})
+
+# Production deployment
+snippet furprod "Production-ready parallel setup"
+	# Setup parallel backend based on environment
+	${1:n_workers} <- if (Sys.getenv("R_PARALLEL_WORKERS") != "") {
+		as.numeric(Sys.getenv("R_PARALLEL_WORKERS"))
+	} else {
+		max(1, parallel::detectCores() - 1)
+	}
+	
+	future::plan(future::multisession, workers = ${1:n_workers})
+	on.exit(future::plan(future::sequential), add = TRUE)
+	
+	cli::cli_inform("Using {${1:n_workers}} parallel workers")
+	
+	${2:# Your parallel processing code}
+
+# File processing in parallel
+snippet furfiles "Parallel file processing"
+	${1:files} <- list.files("${2:path}", pattern = "${3:.csv$}", full.names = TRUE)
+	
+	${4:data_list} <- furrr::future_map(${1:files}, function(${5:file}) {
+		cli::cli_inform("Processing {basename(${5:file})}")
+		data.table::fread(${5:file})
+	}, .options = furrr::furrr_options(seed = TRUE, packages = c("data.table", "cli")))
+	
+	${6:combined_dt} <- data.table::rbindlist(${4:data_list}, idcol = "source_file")
+
+# Model fitting in parallel
+snippet furmodels "Parallel model fitting"
+	${1:model_specs} <- list(
+		${2:model1 = list(formula = y ~ x1, method = "lm")},
+		${3:model2 = list(formula = y ~ x1 + x2, method = "glm")}
+	)
+	
+	${4:models} <- furrr::future_map(${1:model_specs}, function(${5:spec}) {
+		if (${5:spec}$method == "lm") {
+			lm(${5:spec}$formula, data = ${6:data})
+		} else if (${5:spec}$method == "glm") {
+			glm(${5:spec}$formula, data = ${6:data}, family = ${7:binomial()})
+		}
+	}, .options = furrr::furrr_options(seed = TRUE))
