@@ -1,0 +1,200 @@
+# fs - File System Operations
+# ─────────────────────────────────────────────────────────────
+# File Operations
+
+snippet fsexists "Check if file/directory exists"
+	fs::file_exists("${1:path}")
+
+snippet fsdexists "Check if directory exists"
+	fs::dir_exists("${1:path}")
+
+snippet fsinfo "Get file information"
+	fs::file_info("${1:path}")
+
+snippet fssize "Get file size"
+	fs::file_size("${1:path}")
+
+snippet fsaccess "Check file access permissions"
+	fs::file_access("${1:path}", mode = "${2:read}")
+
+# ─────────────────────────────────────────────────────────────
+# Create Operations
+
+snippet fscreate "Create file"
+	fs::file_create("${1:path}")
+
+snippet fsdcreate "Create directory"
+	fs::dir_create("${1:path}")
+
+snippet fstouch "Touch file (update timestamp)"
+	fs::file_touch("${1:path}")
+
+snippet fstemp "Create temporary file"
+	fs::file_temp(pattern = "${1:tmp}", ext = "${2:.txt}")
+
+snippet fstempdir "Create temporary directory"
+	fs::file_temp(pattern = "${1:tmpdir}", tmp_dir = TRUE)
+
+# ─────────────────────────────────────────────────────────────
+# Copy and Move Operations
+
+snippet fscopy "Copy file"
+	fs::file_copy("${1:source}", "${2:destination}")
+
+snippet fsdcopy "Copy directory"
+	fs::dir_copy("${1:source}", "${2:destination}")
+
+snippet fsmove "Move/rename file"
+	fs::file_move("${1:source}", "${2:destination}")
+
+# ─────────────────────────────────────────────────────────────
+# Delete Operations
+
+snippet fsdelete "Delete file"
+	fs::file_delete("${1:path}")
+
+snippet fsddelete "Delete directory"
+	fs::dir_delete("${1:path}")
+
+# ─────────────────────────────────────────────────────────────
+# Directory Operations
+
+snippet fsls "List directory contents"
+	fs::dir_ls("${1:path}")
+
+snippet fslsr "List directory recursively"
+	fs::dir_ls("${1:path}", recurse = TRUE)
+
+snippet fslsglob "List with glob pattern"
+	fs::dir_ls("${1:path}", glob = "${2:*.R}")
+
+snippet fslsregex "List with regex pattern"
+	fs::dir_ls("${1:path}", regexp = "${2:pattern}")
+
+snippet fstree "Show directory tree"
+	fs::dir_tree("${1:path}")
+
+snippet fsmap "Map function over directory"
+	fs::dir_map("${1:path}", ${2:fun})
+
+snippet fswalk "Walk directory with function"
+	fs::dir_walk("${1:path}", ${2:fun})
+
+# ─────────────────────────────────────────────────────────────
+# Path Operations
+
+snippet fspath "Create fs_path object"
+	fs::path("${1:...}")
+
+snippet fspjoin "Join paths"
+	fs::path_join(c("${1:path1}", "${2:path2}"))
+
+snippet fspabs "Get absolute path"
+	fs::path_abs("${1:path}")
+
+snippet fsprel "Get relative path"
+	fs::path_rel("${1:path}", start = "${2:.}")
+
+snippet fspreal "Get real path (resolve symlinks)"
+	fs::path_real("${1:path}")
+
+snippet fspnorm "Normalize path"
+	fs::path_norm("${1:path}")
+
+# ─────────────────────────────────────────────────────────────
+# Path Components
+
+snippet fspfile "Get filename from path"
+	fs::path_file("${1:path}")
+
+snippet fspdir "Get directory from path"
+	fs::path_dir("${1:path}")
+
+snippet fspext "Get file extension"
+	fs::path_ext("${1:path}")
+
+snippet fspextset "Set file extension"
+	fs::path_ext_set("${1:path}", "${2:ext}")
+
+snippet fspextrem "Remove file extension"
+	fs::path_ext_remove("${1:path}")
+
+# ─────────────────────────────────────────────────────────────
+# Path Utilities
+
+snippet fspexpand "Expand tilde in path"
+	fs::path_expand("${1:~/path}")
+
+snippet fsphome "Get home directory"
+	fs::path_home()
+
+snippet fsptemp "Get temp directory"
+	fs::path_temp()
+
+snippet fsppackage "Get package path"
+	fs::path_package("${1:package}")
+
+snippet fspsanitize "Sanitize filename"
+	fs::path_sanitize("${1:filename}")
+
+snippet fsptidy "Tidy path"
+	fs::path_tidy("${1:path}")
+
+# ─────────────────────────────────────────────────────────────
+# Path Tests
+
+snippet fspabs "Test if path is absolute"
+	fs::is_absolute_path("${1:path}")
+
+snippet fsisfile "Test if path is file"
+	fs::is_file("${1:path}")
+
+snippet fsisdir "Test if path is directory"
+	fs::is_dir("${1:path}")
+
+snippet fsislink "Test if path is symlink"
+	fs::is_link("${1:path}")
+
+snippet fsisempty "Test if file is empty"
+	fs::is_file_empty("${1:path}")
+
+# ─────────────────────────────────────────────────────────────
+# File Size 
+
+snippet fssizehuman "Get human readable file size"
+	fs::fs_bytes(fs::file_size("${1:path}"))
+
+# ─────────────────────────────────────────────────────────────
+# Common Workflows
+
+snippet fsworkflow "Common file check and create workflow"
+	if (!fs::file_exists("${1:path}")) {
+		fs::file_create("${1:path}")
+	}
+
+snippet fsdworkflow "Common directory check and create workflow"
+	if (!fs::dir_exists("${1:path}")) {
+		fs::dir_create("${1:path}")
+	}
+
+snippet fsbackup "Backup file with timestamp"
+	backup_path <- fs::path_ext_set("${1:file}", paste0("bak_", format(Sys.time(), "%Y%m%d_%H%M%S")))
+	fs::file_copy("${1:file}", backup_path)
+
+snippet fscleantemp "Clean temporary files"
+	temp_files <- fs::dir_ls(fs::path_temp(), glob = "${1:pattern}")
+	fs::file_delete(temp_files)
+
+snippet fsfindfiles "Find files with pattern"
+	fs::dir_ls("${1:path}", 
+	          recurse = ${2:TRUE}, 
+	          type = "${3:file}",
+	          glob = "${4:*.R}")
+
+snippet fsfilesync "Basic file synchronization check"
+	if (fs::file_exists("${1:source}") && 
+	    (!fs::file_exists("${2:target}") || 
+	     fs::file_info("${1:source}")$modification_time > 
+	     fs::file_info("${2:target}")$modification_time)) {
+		fs::file_copy("${1:source}", "${2:target}", overwrite = TRUE)
+	}
