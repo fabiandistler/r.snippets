@@ -144,3 +144,139 @@ snippet qassert "Compact assertion using format string syntax"
 	checkmate::qassert(${1:x}, "${2:format-string}")
 
 
+# lifecycle package snippets
+# ─────────────────────────────────────────────────────────────
+
+# Function deprecation
+snippet lcdep "Deprecate function with lifecycle"
+	lifecycle::deprecate_warn(
+		when = "${1:1.0.0}",
+		what = "${2:function_name()}",
+		with = "${3:new_function()}"
+	)
+	${0}
+
+snippet lcsoft "Deprecate function with soft warning"
+	lifecycle::deprecate_soft(
+		when = "${1:1.0.0}",
+		what = "${2:function_name()}",
+		with = "${3:new_function()}"
+	)
+	${0}
+
+snippet lcstop "Stop function with lifecycle error"
+	lifecycle::deprecate_stop(
+		when = "${1:1.0.0}",
+		what = "${2:function_name()}",
+		with = "${3:new_function()}"
+	)
+	${0}
+
+# Argument deprecation
+snippet lcarg "Deprecate function argument"
+	if (!lifecycle::is_present(${1:arg})) {
+		lifecycle::deprecate_warn(
+			when = "${2:1.0.0}",
+			what = "${3:function_name()}(${1:arg})",
+			with = "${4:function_name()}(${5:new_arg})"
+		)
+	}
+	${0}
+
+snippet lcreq "Require present argument"
+	if (!lifecycle::is_present(${1:arg})) {
+		lifecycle::deprecate_stop(
+			when = "${2:1.0.0}",
+			what = "${3:function_name()}(${1:arg})"
+		)
+	}
+	${0}
+
+# Badge documentation
+snippet lcbadge "Add lifecycle badge to function docs"
+	#' @lifecycle ${1:experimental}
+	${0}
+
+snippet lcparam "Add lifecycle to parameter docs"
+	#' @param ${1:arg} ${2:Description} `r lifecycle::badge("${3:deprecated}")`
+	${0}
+
+# Feature lifecycle
+snippet lcexp "Mark function as experimental"
+	lifecycle::signal_stage("experimental", "${1:function_name()}")
+	${0}
+
+snippet lcstable "Mark function as stable"
+	lifecycle::signal_stage("stable", "${1:function_name()}")
+	${0}
+
+snippet lcsup "Mark function as superseded"
+	lifecycle::signal_stage("superseded", "${1:function_name()}")
+	${0}
+
+
+# Conditional deprecation
+snippet lccond "Conditional deprecation warning"
+	if (${1:condition}) {
+		lifecycle::deprecate_warn(
+			when = "${2:1.0.0}",
+			what = "${3:function_name()}(${4:arg})",
+			details = "${5:Additional context}"
+		)
+	}
+	${0}
+
+# Advanced deprecation patterns
+snippet lcmsg "Custom deprecation message"
+	lifecycle::deprecate_warn(
+		when = "${1:1.0.0}",
+		what = "${2:function_name()}",
+		details = c(
+			"${3:Additional context}",
+			"${4:More details}"
+		)
+	)
+	${0}
+
+snippet lcrename "Function rename deprecation"
+	# In old function
+	lifecycle::deprecate_warn(
+		when = "${1:1.0.0}",
+		what = "${2:old_function()}",
+		with = "${3:new_function()}"
+	)
+	${3:new_function}(${4:...})
+	${0}
+
+snippet lcdata "Deprecate dataset"
+	lifecycle::deprecate_warn(
+		when = "${1:1.0.0}",
+		what = "${2:dataset}",
+		details = "Use `${3:new_dataset}` instead."
+	)
+	${0}
+
+# Testing lifecycle
+snippet lctest "Test deprecated function"
+	lifecycle::local_options(lifecycle_verbosity = "quiet")
+	expect_warning(
+		${1:deprecated_function()},
+		class = "lifecycle_warning_deprecated"
+	)
+	${0}
+
+snippet lctestno "Test no deprecation warning"
+	lifecycle::local_options(lifecycle_verbosity = "quiet")
+	expect_no_warning(${1:function_call()})
+	${0}
+
+# Documentation helpers
+snippet lcinherit "Inherit lifecycle badge"
+	#' @inheritParams ${1:function_name}
+	#' @inherit ${1:function_name} return
+	${0}
+
+snippet lcdetails "Add lifecycle details section"
+	#' @section Lifecycle:
+	#' ${1:This function is experimental and the interface may change.}
+	${0}
