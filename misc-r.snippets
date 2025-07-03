@@ -120,17 +120,270 @@ snippet r6
 		)
 	)
 
-## S3
-snippet s3c "Constructor for S3 class - Should have one argument for base object and one for each attribute and check type"
-	new_${1:class} <- function(x = double(), att = integer()) {
-	  stopifnot(is.double(x))
-	  stopifnot(is.integer(att))
 
-	  structure(
-	    x,
-	    class = "${1:class}",
-	    att = att
-	  )
+# S3 Object-Oriented Programming Snippets for R
+# ====================================================
+
+## Core S3 Class Infrastructure
+snippet s3new "S3 constructor function"
+	new_${1:classname} <- function(${2:x = double()}, ${3:attr = character()}) {
+		checkmate::assert_${4:double}(${2:x})
+		checkmate::assert_${5:character}(${3:attr})
+		
+		structure(
+			${2:x},
+			class = "${1:classname}",
+			${3:attr} = ${3:attr}
+		)
+	}
+
+snippet s3helper "S3 helper function for user interface"
+	${1:classname} <- function(${2:x}, ${3:attr}) {
+		# Validation and coercion
+		${2:x} <- as.${4:double}(${2:x})
+		${3:attr} <- as.${5:character}(${3:attr})
+		
+		# Create object
+		new_${1:classname}(${2:x}, ${3:attr})
+	}
+
+snippet s3valid "S3 validator function"
+	validate_${1:classname} <- function(x) {
+		values <- unclass(x)
+		${2:attr} <- attr(x, "${2:attr}")
+		
+		if (!is.${3:double}(values)) {
+			stop("${1:classname} values must be ${3:double}", call. = FALSE)
+		}
+		
+		if (length(${2:attr}) != 1) {
+			stop("${2:attr} must be length 1", call. = FALSE)
+		}
+		
+		x
+	}
+
+## Generic Functions and Methods
+snippet s3generic "Create S3 generic function"
+	${1:method_name} <- function(x, ...) {
+		UseMethod("${1:method_name}")
+	}
+
+snippet s3method "S3 method implementation"
+	${1:method_name}.${2:classname} <- function(x, ${3:...}) {
+		${0}
+	}
+
+snippet s3print "S3 print method"
+	print.${1:classname} <- function(x, ...) {
+		cat("${1:classname}:\n")
+		cat("  Values: ", paste(x, collapse = ", "), "\n")
+		cat("  ${2:Attribute}: ", attr(x, "${2:attr}"), "\n")
+		invisible(x)
+	}
+
+snippet s3summary "S3 summary method"
+	summary.${1:classname} <- function(object, ...) {
+		structure(
+			list(
+				n = length(object),
+				mean = mean(object, na.rm = TRUE),
+				${2:attr} = attr(object, "${2:attr}")
+			),
+			class = "summary.${1:classname}"
+		)
+	}
+
+snippet s3length "S3 length method"
+	length.${1:classname} <- function(x) {
+		length(unclass(x))
+	}
+
+snippet s3subset "S3 subset method with [.classname"
+	`[.${1:classname}` <- function(x, i, ...) {
+		new_${1:classname}(
+			unclass(x)[i],
+			attr(x, "${2:attr}")
+		)
+	}
+
+snippet s3subset2 "S3 subset method with [[.classname"
+	`[[.${1:classname}` <- function(x, i, ...) {
+		unclass(x)[[i]]
+	}
+
+snippet s3combine "S3 combine method with c()"
+	c.${1:classname} <- function(...) {
+		objects <- list(...)
+		if (!all(sapply(objects, inherits, "${1:classname}"))) {
+			stop("All objects must be ${1:classname}", call. = FALSE)
+		}
+		
+		values <- unlist(lapply(objects, unclass))
+		${2:attr} <- attr(objects[[1]], "${2:attr}")
+		
+		new_${1:classname}(values, ${2:attr})
+	}
+
+## Mathematical Operations
+snippet s3math "S3 mathematical operations"
+	Math.${1:classname} <- function(x, ...) {
+		new_${1:classname}(
+			NextMethod(),
+			attr(x, "${2:attr}")
+		)
+	}
+
+snippet s3ops "S3 arithmetic operations"
+	Ops.${1:classname} <- function(e1, e2) {
+		if (inherits(e1, "${1:classname}") && inherits(e2, "${1:classname}")) {
+			new_${1:classname}(
+				NextMethod(),
+				attr(e1, "${2:attr}")
+			)
+		} else {
+			NextMethod()
+		}
+	}
+
+## Testing and Validation
+snippet s3is "S3 is.classname test function"
+	is.${1:classname} <- function(x) {
+		inherits(x, "${1:classname}")
+	}
+
+snippet s3as "S3 as.classname coercion function"
+	as.${1:classname} <- function(x, ${2:attr} = "${3:default}") {
+		UseMethod("as.${1:classname}")
+	}
+	
+	as.${1:classname}.default <- function(x, ${2:attr} = "${3:default}") {
+		${1:classname}(x, ${2:attr})
+	}
+
+## Complete S3 Class Template
+snippet s3class "Complete S3 class with constructor, validator, and print"
+	# Constructor
+	new_${1:classname} <- function(${2:x = double()}, ${3:attr = character()}) {
+		checkmate::assert_${4:double}(${2:x})
+		checkmate::assert_${5:character}(${3:attr})
+		
+		structure(
+			${2:x},
+			class = "${1:classname}",
+			${3:attr} = ${3:attr}
+		)
+	}
+	
+	# Helper
+	${1:classname} <- function(${2:x}, ${3:attr}) {
+		${2:x} <- as.${4:double}(${2:x})
+		${3:attr} <- as.${5:character}(${3:attr})
+		
+		validate_${1:classname}(new_${1:classname}(${2:x}, ${3:attr}))
+	}
+	
+	# Validator
+	validate_${1:classname} <- function(x) {
+		values <- unclass(x)
+		${3:attr} <- attr(x, "${3:attr}")
+		
+		if (!is.${4:double}(values)) {
+			stop("${1:classname} values must be ${4:double}", call. = FALSE)
+		}
+		
+		x
+	}
+	
+	# Print method
+	print.${1:classname} <- function(x, ...) {
+		cat("${1:classname}:\n")
+		cat("  Values: ", paste(x, collapse = ", "), "\n")
+		cat("  ${3:Attribute}: ", attr(x, "${3:attr}"), "\n")
+		invisible(x)
+	}
+	
+	# Test function
+	is.${1:classname} <- function(x) {
+		inherits(x, "${1:classname}")
+	}
+
+## data.table Integration Snippets
+snippet s3dt "S3 method for data.table compatibility"
+	as.data.table.${1:classname} <- function(x, ...) {
+		data.table::data.table(
+			value = as.vector(x),
+			${2:attr} = attr(x, "${2:attr}")
+		)
+	}
+
+snippet s3dtmethod "S3 method that returns data.table"
+	${1:method_name}.${2:classname} <- function(x, ...) {
+		dt <- data.table::data.table(
+			value = as.vector(x),
+			${3:attr} = attr(x, "${3:attr}")
+		)
+		dt[, ${4:calculation} := ${5:expression}]
+		dt[]
+	}
+
+## Package Development Integration
+snippet s3export "S3 method export for NAMESPACE"
+	#' @export
+	${1:method_name}.${2:classname} <- function(x, ...) {
+		${0}
+	}
+
+snippet s3roxygen "Complete roxygen2 documentation for S3 method"
+	#' ${1:Method description}
+	#'
+	#' @param x A \code{${2:classname}} object
+	#' @param ... Additional arguments
+	#' @return ${3:Return description}
+	#' @examples
+	#' ${4:example_code}
+	#' @export
+	${5:method_name}.${2:classname} <- function(x, ...) {
+		${0}
+	}
+
+## Advanced S3 Patterns
+snippet s3inherit "S3 class inheritance"
+	new_${1:subclass} <- function(${2:x}, ${3:attr}, ${4:subattr}) {
+		obj <- new_${5:parentclass}(${2:x}, ${3:attr})
+		structure(
+			obj,
+			class = c("${1:subclass}", class(obj)),
+			${4:subattr} = ${4:subattr}
+		)
+	}
+
+snippet s3nexmethod "S3 method using NextMethod()"
+	${1:method_name}.${2:classname} <- function(x, ${3:arg}, ...) {
+		# Pre-processing
+		${4:preprocessing_code}
+		
+		# Call parent method
+		result <- NextMethod()
+		
+		# Post-processing
+		${5:postprocessing_code}
+		
+		result
+	}
+
+snippet s3group "S3 group generic methods"
+	Summary.${1:classname} <- function(..., na.rm = FALSE) {
+		objects <- list(...)
+		values <- unlist(lapply(objects, unclass))
+		
+		switch(.Generic,
+			"sum" = sum(values, na.rm = na.rm),
+			"mean" = mean(values, na.rm = na.rm),
+			"max" = max(values, na.rm = na.rm),
+			"min" = min(values, na.rm = na.rm),
+			stop("Function not defined for ${1:classname} objects")
+		)
 	}
 
 ## S4
