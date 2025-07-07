@@ -16,9 +16,6 @@ snippet pt "Dependency tree"
 snippet message
 	cli::cli_inform("${1:message}", call = NULL)
 
-snippet stop
-	cli::cli_abort("${1:message}", call = NULL)
-
 snippet progress
 	${1:dt}[, {
 		for (i in cli::cli_progress_along(.I)) {
@@ -62,7 +59,7 @@ snippet td "Describe that"
 snippet tc
 	devtools::test_coverage_active_file()
 
-snippet mock
+snippet tmock
 	testthat::local_mocked_bindings()
 
 ### xpectr
