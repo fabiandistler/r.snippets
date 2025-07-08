@@ -43,6 +43,14 @@ snippet dtbetween
 snippet dtif "fast conditional assignment"
 	${1:DT}[, ${4:newcol} := data.table::fifelse(${2:col} > ${3:thresh}, "${5:yes}", "${6:no}")]
 
+snippet dtfcase "Fast vectorized case_when alternative"
+	${1:DT}[, ${2:new_col} := data.table::fcase(
+		${3:condition1}, ${4:value1},
+		${5:condition2}, ${6:value2},
+		default = ${7:default_value}
+	)]
+	${0}
+
 snippet dtunique "fast distinct count"
 	${1:DT}[, .(Unique = data.table::uniqueN(${2:col}))]
 
