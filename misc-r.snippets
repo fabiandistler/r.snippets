@@ -45,9 +45,6 @@ snippet fun "Function skeleton with try catch and error print"
 snippet func "Compile function for speed"
 	${1:compiled_fun} <- compiler::cmpfun(${2:fun_name})
 
-snippet ab "Autobrowse function"
-	${1:function_to_browse} <- purrr::auto_browse(${1:function_to_browse})
-
 snippet mm "Cache function"
 	${1:function_to_cache} <- memoise::memoise(${1:function_to_cache})
 
@@ -77,13 +74,6 @@ snippet mat
 ## btw
 snippet btw "Describe R objects for LLM context"
 	btw::btw(${1:object}, ${2:clipboard = TRUE})
-
-snippet btwcl "Create btw-enhanced LLM chat client"
-	ch <- btw::btw_client(${1:context_objects})
-	ch$chat("${2:your_question}")
-
-snippet btwt "Add btw tools to existing chat"
-	chat$set_tools(c(chat$get_tools(), btw::btw_tools()))
 
 snippet btwcf "Describe current file/selection for LLM"
 	btw::btw("${1:@current_file}")
