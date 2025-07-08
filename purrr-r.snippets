@@ -1,274 +1,274 @@
 # purrr Functional Programming Snippets
 
 ## Map Family (Core Functions)
-snippet map "Apply function to list/vector"
+snippet pmap "Apply function to list/vector"
 	purrr::map(${1:x}, ${2:~.x})
 
-snippet mapl "Apply function and return list"
+snippet pmapl "Apply function and return list"
 	purrr::map(${1:x}, ${2:function(.x) {
 		${3:# Function body}
 	}})
 
-snippet mapd "Apply function and return double vector"
+snippet pmapd "Apply function and return double vector"
 	purrr::map_dbl(${1:x}, ${2:~.x})
 
-snippet mapc "Apply function and return character vector"
+snippet pmapc "Apply function and return character vector"
 	purrr::map_chr(${1:x}, ${2:~.x})
 
-snippet mapi "Apply function and return integer vector"
+snippet pmapi "Apply function and return integer vector"
 	purrr::map_int(${1:x}, ${2:~.x})
 
-snippet mapb "Apply function and return logical vector"
+snippet pmapb "Apply function and return logical vector"
 	purrr::map_lgl(${1:x}, ${2:~.x})
 
 
-snippet map2 "Apply function to pairs from two vectors"
+snippet pmap2 "Apply function to pairs from two vectors"
 	purrr::map2(${1:x}, ${2:y}, ${3:~.x})
 
-snippet map2d "Apply function to pairs, return double vector"
+snippet pmap2d "Apply function to pairs, return double vector"
 	purrr::map2_dbl(${1:x}, ${2:y}, ${3:~.x + .y})
 
-snippet pmap "Apply function to multiple vectors"
+snippet ppmap "Apply function to multiple vectors"
 	purrr::pmap(list(${1:x}, ${2:y}, ${3:z}), ${4:function(...)})
 
-snippet pmapd "Apply function to multiple vectors, return double"
+snippet ppmapd "Apply function to multiple vectors, return double"
 	purrr::pmap_dbl(list(${1:x}, ${2:y}), ${3:~..1 + ..2})
 
 ## Map Variants (Conditional and Selective)
-snippet mapif "Apply function conditionally where predicate is TRUE"
+snippet pmapif "Apply function conditionally where predicate is TRUE"
 	purrr::map_if(${1:x}, ${2:is.numeric}, ${3:~.x * 2})
 
-snippet mapifnot "Apply function where predicate is FALSE"
+snippet pmapifnot "Apply function where predicate is FALSE"
 	purrr::map_if(${1:x}, ${2:~!is.numeric(.x)}, ${3:as.character})
 
-snippet mapat "Apply function at specific positions"
+snippet pmapat "Apply function at specific positions"
 	purrr::map_at(${1:x}, ${2:c(1, 3)}, ${3:~.x^2})
 
-snippet mapmod "Modify list in place"
+snippet pmapmod "Modify list in place"
 	purrr::modify(${1:x}, ${2:~.x})
 
-snippet mapmodif "Modify conditionally in place"
+snippet pmapmodif "Modify conditionally in place"
 	purrr::modify_if(${1:x}, ${2:is.numeric}, ${3:~round(.x, 2)})
 
-snippet mapmodat "Modify at specific positions in place"
+snippet pmapmodat "Modify at specific positions in place"
 	purrr::modify_at(${1:x}, ${2:c("col1", "col2")}, ${3:as.factor})
 
 ## Walk Functions (Side Effects)
-snippet walk "Apply function for side effects"
+snippet pwalk "Apply function for side effects"
 	purrr::walk(${1:x}, ${2:print})
 
-snippet walk2 "Apply function to pairs for side effects"
+snippet pwalk2 "Apply function to pairs for side effects"
 	purrr::walk2(${1:x}, ${2:y}, ${3:~cat(.x, ":", .y, "\n")})
 
-snippet pwalk "Apply function to multiple inputs for side effects"
+snippet ppwalk "Apply function to multiple inputs for side effects"
 	purrr::pwalk(list(${1:x}, ${2:y}), ${3:function(a, b) cat(a, b, "\n")})
 
 ## imap Functions (Index-aware mapping)
-snippet imap "Map with index/name awareness"
+snippet pimap "Map with index/name awareness"
 	purrr::imap(${1:x}, ${2:~paste(.y, .x, sep = ": ")})
 
-snippet imapd "Index-aware map returning double"
+snippet pimapd "Index-aware map returning double"
 	purrr::imap_dbl(${1:x}, ${2:~.y * .x})
 
-snippet imapc "Index-aware map returning character"
+snippet pimapc "Index-aware map returning character"
 	purrr::imap_chr(${1:x}, ${2:~paste(.y, .x)})
 
 ## Predicate Functions
-snippet keep "Keep elements matching predicate"
+snippet pkeep "Keep elements matching predicate"
 	purrr::keep(${1:x}, ${2:is.numeric})
 
-snippet discard "Remove elements matching predicate"
+snippet pdiscard "Remove elements matching predicate"
 	purrr::discard(${1:x}, ${2:is.na})
 
-snippet compact "Remove NULL and empty elements"
+snippet pcompact "Remove NULL and empty elements"
 	purrr::compact(${1:x})
 
-snippet detect "Find first element matching predicate"
+snippet pdetect "Find first element matching predicate"
 	purrr::detect(${1:x}, ${2:~.x > 10})
 
-snippet detecti "Find index of first matching element"
+snippet pdetecti "Find index of first matching element"
 	purrr::detect_index(${1:x}, ${2:~.x > 10})
 
-snippet has "Check if elements have names/indices"
+snippet phas "Check if elements have names/indices"
 	purrr::has_element(${1:x}, ${2:"name"})
 
-snippet every "Test if all elements satisfy predicate"
+snippet pevery "Test if all elements satisfy predicate"
 	purrr::every(${1:x}, ${2:is.numeric})
 
-snippet some "Test if any element satisfies predicate"
+snippet psome "Test if any element satisfies predicate"
 	purrr::some(${1:x}, ${2:is.na})
 
-snippet none "Test if no element satisfies predicate"
+snippet pnone "Test if no element satisfies predicate"
 	purrr::none(${1:x}, ${2:is.na})
 
 ## Reduce Functions
-snippet reduce "Combine elements with binary function"
+snippet preduce "Combine elements with binary function"
 	purrr::reduce(${1:x}, ${2:`+`})
 
-snippet reducel "Reduce from left with starting value"
+snippet preducel "Reduce from left with starting value"
 	purrr::reduce(${1:x}, ${2:`+`}, .init = ${3:0})
 
-snippet reducer "Reduce from right"
+snippet preducer "Reduce from right"
 	purrr::reduce_right(${1:x}, ${2:paste}, .init = ${3:""})
 
-snippet accumulate "Iterative reduce showing intermediate results"
+snippet paccumulate "Iterative reduce showing intermediate results"
 	purrr::accumulate(${1:x}, ${2:`+`})
 
-snippet accumr "Accumulate from right"
+snippet paccumr "Accumulate from right"
 	purrr::accumulate_right(${1:x}, ${2:`+`})
 
 ## List Manipulation
-snippet flatten "Flatten one level of list hierarchy"
+snippet pflatten "Flatten one level of list hierarchy"
 	purrr::flatten(${1:x})
 
-snippet flattend "Flatten and return double vector"
+snippet pflattend "Flatten and return double vector"
 	purrr::flatten_dbl(${1:x})
 
-snippet flattenc "Flatten and return character vector"
+snippet pflattenc "Flatten and return character vector"
 	purrr::flatten_chr(${1:x})
 
-snippet transpose "Transpose list of lists"
+snippet ptranspose "Transpose list of lists"
 	purrr::transpose(${1:x})
 
-snippet listc "Combine vectors into list"
+snippet plistc "Combine vectors into list"
 	purrr::list_c(${1:x})
 
-snippet listrbind "Row-bind list of data.frames"
+snippet plistrbind "Row-bind list of data.frames"
 	purrr::list_rbind(${1:x})
 
-snippet listcbind "Column-bind list of data.frames"
+snippet plistcbind "Column-bind list of data.frames"
 	purrr::list_cbind(${1:x})
 
 ## Advanced Functional Programming
-snippet compose "Compose multiple functions"
+snippet pcompose "Compose multiple functions"
 	purrr::compose(${1:fun1}, ${2:fun2}, ${3:fun3})
 
-snippet partial "Partially apply function arguments"
+snippet ppartial "Partially apply function arguments"
 	purrr::partial(${1:function}, ${2:arg1} = ${3:value})
 
-snippet negate "Negate a predicate function"
+snippet pnegate "Negate a predicate function"
 	purrr::negate(${1:is.na})
 
-snippet possibly "Safely handle errors with default value"
+snippet ppossibly "Safely handle errors with default value"
 	purrr::possibly(${1:function}, ${2:otherwise = NA})
 
-snippet quietly "Capture output, messages, warnings"
+snippet pquietly "Capture output, messages, warnings"
 	purrr::quietly(${1:function})(${2:args})
 
-snippet safely "Capture errors without stopping"
+snippet psafely "Capture errors without stopping"
 	purrr::safely(${1:function})(${2:args})
 
-snippet autobrowse "Debug function automatically on error"
+snippet pautobrowse "Debug function automatically on error"
 	purrr::auto_browse(${1:function})
 
 ## Plucking and Extracting
-snippet pluck "Extract element by position or name"
+snippet ppluck "Extract element by position or name"
 	purrr::pluck(${1:x}, ${2:1}, ${3:"name"})
 
-snippet chuck "Extract element (error if missing)"
+snippet pchuck "Extract element (error if missing)"
 	purrr::chuck(${1:x}, ${2:"name"})
 
-snippet attr "Extract attribute safely"
+snippet pattr "Extract attribute safely"
 	purrr::attr_getter(${1:"attr_name"})(${2:x})
 
 ## Set Operations
-snippet setnames "Set names for list/vector"
+snippet psetnames "Set names for list/vector"
 	purrr::set_names(${1:x}, ${2:c("a", "b", "c")})
 
-snippet setatnames "Set names from character vector"
+snippet psetatnames "Set names from character vector"
 	purrr::set_names(${1:x}, ${2:names_vector})
 
 ## Cross Products and Combinations
-snippet cross "Cross product of lists"
+snippet pcross "Cross product of lists"
 	purrr::cross(list(${1:x}, ${2:y}))
 
-snippet crossn "Cross product of n lists"
+snippet pcrossn "Cross product of n lists"
 	purrr::cross_n(list(${1:x}, ${2:y}, ${3:z}))
 
 ## Lambda Shortcuts and Formulas
-snippet lambda "Anonymous function shorthand"
+snippet plambda "Anonymous function shorthand"
 	~${1:.x}
 
-snippet lambdax "Anonymous function with .x argument"
+snippet plambdax "Anonymous function with .x argument"
 	~${1:.x + 1}
 
-snippet lambdaxy "Anonymous function with .x and .y"
+snippet plambdaxy "Anonymous function with .x and .y"
 	~${1:.x + .y}
 
-snippet lambdadot "Anonymous function with numbered args"
+snippet plambdadot "Anonymous function with numbered args"
 	~${1:..1 + ..2}
 
 ## Useful Patterns for Data Science
-snippet mapdt "Map over data.table list-columns"
+snippet pmapdt "Map over data.table list-columns"
 	${1:DT}[, ${2:result} := purrr::map(${3:list_col}, ${4:~.x})]
 
-snippet mapdtd "Map over data.table returning double"
+snippet pmapdtd "Map over data.table returning double"
 	${1:DT}[, ${2:result} := purrr::map_dbl(${3:list_col}, ${4:~mean(.x)})]
 
-snippet mapdtc "Map over data.table returning character"
+snippet pmapdtc "Map over data.table returning character"
 	${1:DT}[, ${2:result} := purrr::map_chr(${3:list_col}, ${4:~paste(.x, collapse = ",")})]
 
-snippet nested "Nested data.table operations with purrr"
+snippet pnested "Nested data.table operations with purrr"
 	${1:DT}[, .(${2:result} = purrr::map(${3:list(.SD)}, ${4:function(dt) {
 		${5:# Operations on each group}
 	}})), by = ${6:group}]
 
-snippet splitmap "Split-apply-combine pattern"
+snippet psplitmap "Split-apply-combine pattern"
 	${1:data} %>%
 		split(${2:grouping_var}) |>
 		purrr::map(${3:~.x}) |>
 		purrr::list_rbind()
 
 ## Model Fitting Patterns
-snippet mapmodel "Map model fitting over groups"
+snippet pmapmodel "Map model fitting over groups"
 	${1:data} %>%
 		split(${2:.$group}) |>
 		purrr::map(${3:~lm(y ~ x, data = .x)}) |>
 		purrr::map(summary) %>%
 		purrr::map_dbl(${4:"r.squared"})
 
-snippet mappredict "Map prediction over models"
+snippet pmappredict "Map prediction over models"
 	purrr::map2(${1:models}, ${2:test_data}, ${3:~predict(.x, .y)})
 
-snippet mapmetrics "Extract metrics from model list"
+snippet pmapmetrics "Extract metrics from model list"
 	purrr::map(${1:models}, ${2:~broom::glance(.x)}) |>
 		purrr::list_rbind()
 
 ## Error Handling Patterns
-snippet trysafely "Safe operation with error capture"
+snippet ptrysafely "Safe operation with error capture"
 	${1:safe_fun} <- purrr::safely(${2:risky_function})
 	${3:results} <- purrr::map(${4:inputs}, ${1:safe_fun})
 	${5:errors} <- purrr::transpose(${3:results})$error
 	${6:successes} <- purrr::transpose(${3:results})$result
 
-snippet tryquietly "Quiet operation capturing messages"
+snippet ptryquietly "Quiet operation capturing messages"
 	${1:quiet_fun} <- purrr::quietly(${2:noisy_function})
 	${3:results} <- purrr::map(${4:inputs}, ${1:quiet_fun})
 
-snippet trypossibly "Robust operation with fallback"
+snippet ptrypossibly "Robust operation with fallback"
 	${1:robust_fun} <- purrr::possibly(${2:function}, ${3:otherwise = NA})
 	${4:results} <- purrr::map(${5:inputs}, ${1:robust_fun})
 
 ## File Operations
-snippet mapread "Map read operations over files"
+snippet pmapread "Map read operations over files"
 	${1:files} %>%
 		purrr::set_names() %>%
 		purrr::map(${2:~data.table::fread(.x)})
 
-snippet mapwrite "Map write operations over data list"
+snippet pmapwrite "Map write operations over data list"
 	purrr::iwalk(${1:data_list}, ${2:~data.table::fwrite(.x, paste0(.y, ".csv"))})
 
-snippet mapglob "Map over glob pattern results"
+snippet pmapglob "Map over glob pattern results"
 	${1:pattern} %>%
 		Sys.glob() %>%
 		purrr::set_names(basename) %>%
 		purrr::map(${2:data.table::fread})
 
 ## Testing and Validation
-snippet maptest "Map testing over data structures"
+snippet pmaptest "Map testing over data structures"
 	purrr::map_lgl(${1:data_list}, ${2:~all(complete.cases(.x))})
 
-snippet mapvalidate "Map validation checks"
+snippet pmapvalidate "Map validation checks"
 	purrr::map(${1:data_list}, ${2:function(.x) {
 		list(
 			nrows = nrow(.x),
@@ -277,8 +277,3 @@ snippet mapvalidate "Map validation checks"
 		)
 	}})
 
-snippet assertall "Assert all elements pass test"
-	stopifnot(purrr::every(${1:x}, ${2:is.numeric}))
-
-snippet assertsome "Assert some elements pass test"
-	stopifnot(purrr::some(${1:x}, ${2:~!is.na(.x)}))
