@@ -54,3 +54,8 @@ snippet dtcj "cartesian product of vectors"
 	${1:res} <- data.table::CJ(${2:v1}, ${3:v2}${4:, sorted = TRUE, unique = TRUE})
 	${0}
 
+snippet dttic "start timer"
+  started.at=proc.time()
+
+snippet dttoc "stop timer"
+  cat("Finished in",data.table::timetaken(started.at),"\n")
