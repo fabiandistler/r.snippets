@@ -34,12 +34,6 @@ snippet ca "cli abort - flexible error with all options"
 snippet cas "cli abort - simple one-liner"
 	cli::cli_abort("${1:Subject} ${2:must be|can't} ${3:expectation}${4:, not actual}.")
 
-snippet cah "cli abort - with hint question"
-	cli::cli_abort(c(
-		"${1:Problem statement}.",
-		"i" = "Did you ${2:mean/forget to} ${3:suggestion}?"
-	))
-
 # =============================================================================
 # VALIDATION PATTERNS - For argument/type checking
 # =============================================================================
@@ -80,53 +74,6 @@ snippet cad "cli abort - data/column operations"
 		# "Can't select columns that don't exist"
 		"Can't ${1:find|use|select} ${2:column} {.field ${3:name}} ${4:in {.arg .data}}."
 	)
-
-
-# =============================================================================
-# STYLE GUIDE REMINDERS (as comments)
-# =============================================================================
-
-snippet castyle "cli abort - style guide template with reminders"
-	cli::cli_abort(c(
-		# PROBLEM STATEMENT RULES:
-		# - Start with general problem
-		# - Use sentence case
-		# - End with period
-		# - Use "must" when expectation is clear
-		# - Use "can't" when expectation is unclear
-		# - Keep under 80 characters (use bullets for longer)
-		"${1:Problem statement}.",
-		
-		# ERROR DETAILS:
-		# - Use "x" bullets for what went wrong
-		# - Use "i" bullets for context
-		# - Keep bullets short and sweet
-		# - Reveal location/name/content of problem
-		# - Don't blame specific argument unless certain
-		"x" = "${2:What went wrong}",
-		
-		# HINTS (optional):
-		# - Only for common, clear mistakes
-		# - Always end with question mark
-		# - Use "i" bullet
-		# - Suggest specific fix
-		"i" = "Did you ${3:suggestion}?"
-		
-		# FORMATTING:
-		# - {.arg x} for arguments
-		# - {.field x} for columns  
-		# - {.fn x} for functions
-		# - {.cls x} for classes
-		# - {.val x} for values
-		# - {.code x} for code
-		# - {.path x} for paths
-		# - Backticks avoided (use markup instead)
-		
-		# TRUNCATION:
-		# - Show max 5 issues
-		# - Then "... and {n} more problems"
-	))
-
 
 # =============================================================================
 # MISC
