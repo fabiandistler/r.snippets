@@ -71,6 +71,10 @@ snippet ts "Time stamp"
 snippet mat
 	matrix(${1:data}, nrow = ${2:rows}, ncol = ${3:cols})
 
+snippet pretty "Pretty formatting - choose function"
+	prettyunits::pretty_${1:bytes|num|ms|sec|dt|p_value|round|signif|color|colour}(${2:x}${3:, digits = 2})
+	${0}
+
 ## btw
 snippet btw "Describe R objects for LLM context"
 	btw::btw(${1:object}, ${2:clipboard = TRUE})
