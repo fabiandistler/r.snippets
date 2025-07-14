@@ -9,9 +9,6 @@ snippet ll "lint current file"
 snippet ff
 	flir::fix(path = rstudioapi::getSourceEditorContext()\$path)
 
-snippet pt "Dependency tree"
-	pak::pkg_deps_tree("${1:package_name}")
-
 ## Handlers
 snippet message
 	cli::cli_inform("${1:message}", call = NULL)
