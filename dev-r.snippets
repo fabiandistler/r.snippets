@@ -9,10 +9,6 @@ snippet ll "lint current file"
 snippet ff
 	flir::fix(path = rstudioapi::getSourceEditorContext()\$path)
 
-## Handlers
-snippet message
-	cli::cli_inform("${1:message}", call = NULL)
-
 snippet progress
 	${1:dt}[, {
 		for (i in cli::cli_progress_along(.I)) {
