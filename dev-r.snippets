@@ -12,17 +12,6 @@ snippet ff
 snippet pt "Dependency tree"
 	pak::pkg_deps_tree("${1:package_name}")
 
-## Handlers
-snippet message
-	cli::cli_inform("${1:message}", call = NULL)
-
-snippet progress
-	${1:dt}[, {
-		for (i in cli::cli_progress_along(.I)) {
-			${2:# Code for .SD[i] or .I[i]}
-		}
-	}, by = ${3:grp}]
-
 
 ## Plotters
 snippet pc "Network plot of package"
