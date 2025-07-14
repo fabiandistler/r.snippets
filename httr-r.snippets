@@ -1,0 +1,245 @@
+# httr2 HTTP Requests & API Integration Snippets
+# ─────────────────────────────────────────────────────────────
+
+## Basic Request Creation
+snippet hreq "Create basic HTTP request"
+	${1:req} <- httr2::request("${2:https://api.example.com}")
+
+snippet hget "GET request with perform"
+	${1:resp} <- httr2::request("${2:https://api.example.com}") |>
+		httr2::req_perform()
+
+snippet hpost "POST request with JSON body"
+	${1:resp} <- httr2::request("${2:https://api.example.com}") |>
+		httr2::req_body_json(${3:data}) |>
+		httr2::req_perform()
+
+## Request Building
+snippet hhead "Add headers to request"
+	httr2::req_headers(
+		"${1:Authorization}" = "${2:Bearer token}",
+		"${3:Content-Type}" = "${4:application/json}"
+	)
+
+snippet hquery "Add query parameters"
+	httr2::req_url_query(
+		${1:param1} = "${2:value1}",
+		${3:param2} = "${4:value2}"
+	)
+
+snippet hpath "Set/append URL path"
+	httr2::req_url_path("${1:api/v1/endpoint}")
+
+snippet hpatha "Append to URL path"
+	httr2::req_url_path_append("${1:additional/path}")
+
+snippet hmethod "Set HTTP method"
+	httr2::req_method("${1:PATCH}")
+
+## Request Body
+snippet hjson "JSON body"
+	httr2::req_body_json(${1:data})
+
+snippet hjsonmod "Modify existing JSON body"
+	httr2::req_body_json_modify(${1:field} = ${2:value})
+
+snippet hform "Form-encoded body"
+	httr2::req_body_form(
+		${1:field1} = "${2:value1}",
+		${3:field2} = "${4:value2}"
+	)
+
+snippet hmulti "Multipart form body"
+	httr2::req_body_multipart(
+		${1:file} = curl::form_file("${2:path/to/file}"),
+		${3:field} = "${4:value}"
+	)
+
+snippet hraw "Raw body"
+	httr2::req_body_raw(${1:data}, type = "${2:application/octet-stream}")
+
+## Authentication
+snippet hbasic "Basic authentication"
+	httr2::req_auth_basic("${1:username}", "${2:password}")
+
+snippet hbearer "Bearer token authentication"
+	httr2::req_auth_bearer_token("${1:token}")
+
+snippet hoauth "OAuth authentication code flow"
+	httr2::req_oauth_auth_code(
+		client = ${1:oauth_client},
+		auth_url = "${2:https://api.example.com/oauth/authorize}",
+		scope = "${3:read write}"
+	)
+
+## Response Handling
+snippet hresp "Extract response components"
+	${1:status} <- ${2:resp} |> httr2::resp_status()
+	${3:content_type} <- ${2:resp} |> httr2::resp_content_type()
+	${4:data} <- ${2:resp} |> httr2::resp_body_json()
+
+snippet hstatus "Check response status"
+	httr2::resp_check_status(${1:resp})
+
+snippet hbody "Extract response body as JSON"
+	${1:data} <- ${2:resp} |> httr2::resp_body_json()
+
+snippet hbodystr "Extract response body as string"
+	${1:content} <- ${2:resp} |> httr2::resp_body_string()
+
+snippet hbodyhtml "Extract response body as HTML"
+	${1:html} <- ${2:resp} |> httr2::resp_body_html()
+
+snippet hheaders "Extract response headers"
+	${1:headers} <- ${2:resp} |> httr2::resp_headers()
+
+snippet hheader "Extract specific header"
+	${1:value} <- ${2:resp} |> httr2::resp_header("${3:content-type}")
+
+## Request Control & Performance
+snippet hretry "Add retry strategy"
+	httr2::req_retry(
+		max_tries = ${1:3},
+		backoff = ~ ${2:2} ^ .x
+	)
+
+snippet hthrottle "Add throttling/rate limiting"
+	httr2::req_throttle(rate = ${1:2})
+
+snippet hcache "Add caching"
+	httr2::req_cache(path = "${1:~/.cache/httr2}")
+
+snippet htimeout "Set request timeout"
+	httr2::req_timeout(${1:30})
+
+snippet herror "Custom error handling"
+	httr2::req_error(
+		is_error = function(resp) httr2::resp_status(resp) >= ${1:400},
+		body = function(resp) paste("API Error:", httr2::resp_body_string(resp))
+	)
+
+## Debugging & Development
+snippet hdry "Dry run - see what will be sent"
+	httr2::req_dry_run()
+
+snippet hverb "Add verbosity"
+	httr2::req_verbose()
+
+snippet hlast "Get last request/response"
+	${1:last_req} <- httr2::last_request()
+	${2:last_resp} <- httr2::last_response()
+
+## Complete Request Patterns
+snippet hapi "Complete API request pattern"
+	${1:resp} <- httr2::request("${2:https://api.example.com}") |>
+		httr2::req_url_path("${3:endpoint}") |>
+		httr2::req_headers("Authorization" = paste("Bearer", ${4:token})) |>
+		httr2::req_timeout(${5:30}) |>
+		httr2::req_retry(max_tries = ${6:3}) |>
+		httr2::req_perform()
+	
+	${7:data} <- ${1:resp} |> httr2::resp_body_json()
+
+snippet hrest "RESTful API wrapper function"
+	${1:api_get} <- function(endpoint, token = NULL) {
+		req <- httr2::request("${2:https://api.example.com}") |>
+			httr2::req_url_path(endpoint) |>
+			httr2::req_timeout(${3:30}) |>
+			httr2::req_retry(max_tries = ${4:3})
+		
+		if (!is.null(token)) {
+			req <- req |> httr2::req_auth_bearer_token(token)
+		}
+		
+		resp <- req |> httr2::req_perform()
+		resp |> httr2::resp_body_json()
+	}
+
+## Pagination & Iteration
+snippet hiter "Iterative requests for pagination"
+	${1:responses} <- httr2::request("${2:https://api.example.com}") |>
+		httr2::req_url_path("${3:endpoint}") |>
+		httr2::req_perform_iterative(
+			next_req = httr2::iterate_with_offset("${4:offset}"),
+			max_reqs = ${5:10}
+		)
+	
+	${6:data} <- httr2::resps_data(${1:responses}, \(resp) resp |> httr2::resp_body_json())
+
+snippet hparallel "Parallel requests"
+	${1:requests} <- list(
+		httr2::request("${2:https://api.example.com/endpoint1}"),
+		httr2::request("${3:https://api.example.com/endpoint2}")
+	)
+	
+	${4:responses} <- ${1:requests} |> httr2::req_perform_parallel()
+
+## Error Handling with tryCatch
+snippet htry "Error handling with httr2"
+	tryCatch({
+		${1:resp} <- httr2::request("${2:https://api.example.com}") |>
+			httr2::req_perform()
+		${3:data} <- ${1:resp} |> httr2::resp_body_json()
+	}, 
+	httr2_http_404 = function(e) {
+		message("Resource not found")
+		NULL
+	},
+	httr2_http_500 = function(e) {
+		message("Server error: ", e$message)
+		NULL
+	})
+
+## OAuth Client Setup
+snippet hclient "Create OAuth client"
+	${1:client} <- httr2::oauth_client(
+		id = "${2:client_id}",
+		secret = "${3:client_secret}",
+		token_url = "${4:https://api.example.com/oauth/token}",
+		name = "${5:my_app}"
+	)
+
+## Secret Management
+snippet hsecret "Encrypt/decrypt secrets"
+	# Create key (run once)
+	httr2::secret_make_key("${1:MY_APP}")
+	
+	# Encrypt secret
+	httr2::secret_encrypt("${2:secret_value}", "${1:MY_APP}")
+	
+	# Decrypt in code
+	${3:secret} <- httr2::secret_decrypt("${4:encrypted_value}", "${1:MY_APP}")
+
+## URL Manipulation
+snippet hurl "Parse and modify URL"
+	${1:parsed} <- httr2::url_parse("${2:https://api.example.com/path?param=value}")
+	${3:modified} <- httr2::url_modify(${1:parsed}, path = "${4:new/path}")
+	${5:url_string} <- httr2::url_build(${3:modified})
+
+## curl Translation
+snippet hcurl "Translate curl command to httr2"
+	httr2::curl_translate('${1:curl -X POST https://api.example.com -H "Content-Type: application/json" -d "{"key":"value"}"}')
+
+## Streaming Responses
+snippet hstream "Stream response data"
+	${1:resp} <- httr2::request("${2:https://api.example.com/stream}") |>
+		httr2::req_perform_connection()
+	
+	repeat {
+		${3:chunk} <- httr2::resp_stream_lines(${1:resp}, n = ${4:1})
+		if (length(${3:chunk}) == 0) break
+		# Process chunk
+		${0}
+	}
+	
+	close(${1:resp})
+
+## Testing Helpers
+snippet hmock "Mock responses for testing"
+	httr2::with_mocked_responses(
+		httr2::request("${1:https://api.example.com}") = httr2::response(${2:200}, body = '${3:{"test": true}}'),
+		{
+			# Your test code here
+			${0}
+		}
+	)
