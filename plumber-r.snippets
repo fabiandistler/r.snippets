@@ -1,0 +1,420 @@
+# Plumber API Snippets (Programmatic, Base Pipe)
+# ─────────────────────────────────────────────────────────────
+# Basic Programmatic API Structure
+
+snippet plapi "Basic programmatic plumber API"
+	library(plumber)
+	
+	pr() |>
+		pr_get(path = "/${1:endpoint}", 
+			   handler = function(${2:param} = "${3:default}") {
+				   ${4:# Your R code here}
+				   list(result = ${2:param})
+			   }) |>
+		pr_run(port = ${5:8000}, host = "${6:127.0.0.1}")
+
+# ─────────────────────────────────────────────────────────────
+# HTTP Methods (Programmatic)
+
+snippet prget "Add GET endpoint"
+	pr_get(path = "/${1:endpoint}", 
+		   handler = function(${2:param} = "${3:default}") {
+			   ${4:# Your code here}
+			   list(result = ${2:param})
+		   })
+
+snippet prpost "Add POST endpoint"
+	pr_post(path = "/${1:endpoint}", 
+			handler = function(${2:data}) {
+				${3:# Process posted data}
+				list(status = "success", received = ${2:data})
+			})
+
+snippet prput "Add PUT endpoint"
+	pr_put(path = "/${1:endpoint}/<id>", 
+		   handler = function(${2:id}, ${3:data}) {
+			   ${4:# Update resource}
+			   list(id = ${2:id}, updated = TRUE)
+		   })
+
+snippet prdelete "Add DELETE endpoint"
+	pr_delete(path = "/${1:endpoint}/<id>", 
+			  handler = function(${2:id}) {
+				  ${3:# Delete resource}
+				  list(id = ${2:id}, deleted = TRUE)
+			  })
+
+snippet prpatch "Add PATCH endpoint"
+	pr_patch(path = "/${1:endpoint}/<id>", 
+			 handler = function(${2:id}, ${3:changes}) {
+				 ${4:# Apply partial updates}
+				 list(id = ${2:id}, patched = TRUE)
+			 })
+
+snippet prhead "Add HEAD endpoint"
+	pr_head(path = "/${1:endpoint}", 
+			handler = function() {
+				${2:# Return headers only}
+				list(status = "ok")
+			})
+
+snippet proptions "Add OPTIONS endpoint"
+	pr_options(path = "/${1:endpoint}", 
+			   handler = function() {
+				   ${2:# Return allowed methods}
+				   list(methods = c("GET", "POST", "PUT", "DELETE"))
+			   })
+
+# ─────────────────────────────────────────────────────────────
+# Serializers (Programmatic)
+
+snippet prpng "PNG plot endpoint"
+	pr_get(path = "/${1:plot}", 
+		   handler = function(${2:param} = "${3:default}") {
+			   ${4:# Generate plot}
+			   plot(${5:data})
+		   },
+		   serializer = serializer_png())
+
+snippet prjpeg "JPEG plot endpoint"
+	pr_get(path = "/${1:plot}", 
+		   handler = function(${2:param} = "${3:default}") {
+			   ${4:# Generate plot}
+			   plot(${5:data})
+		   },
+		   serializer = serializer_jpeg())
+
+snippet prcsv "CSV data endpoint"
+	pr_get(path = "/${1:data}", 
+		   handler = function(${2:param} = "${3:default}") {
+			   ${4:# Return data frame}
+			   data.frame(x = 1:10, y = rnorm(10))
+		   },
+		   serializer = serializer_csv())
+
+snippet prhtml "HTML endpoint"
+	pr_get(path = "/${1:page}", 
+		   handler = function(${2:param} = "${3:default}") {
+			   ${4:# Return HTML string}
+			   paste("<h1>Hello", ${2:param}, "</h1>")
+		   },
+		   serializer = serializer_html())
+
+snippet prtext "Plain text endpoint"
+	pr_get(path = "/${1:text}", 
+		   handler = function(${2:param} = "${3:default}") {
+			   ${4:# Return plain text}
+			   paste("Hello", ${2:param})
+		   },
+		   serializer = serializer_text())
+
+snippet prjson "JSON endpoint (explicit)"
+	pr_get(path = "/${1:data}", 
+		   handler = function(${2:param} = "${3:default}") {
+			   ${4:# Return data}
+			   list(result = ${2:param})
+		   },
+		   serializer = serializer_json())
+
+# ─────────────────────────────────────────────────────────────
+# Filters (Programmatic)
+
+snippet prfilter "Add custom filter"
+	pr_filter(name = "${1:filtername}", 
+			  handler = function(req, res) {
+				  ${2:# Filter logic}
+				  if (${3:condition}) {
+					  forward()
+				  } else {
+					  ${4:# Handle error}
+					  list(error = "${5:Access denied}")
+				  }
+			  })
+
+snippet prauth "Authentication filter"
+	pr_filter(name = "auth", 
+			  handler = function(req, res) {
+				  token <- req$HTTP_AUTHORIZATION
+				  if (is.null(token) || !${1:validate_token}(token)) {
+					  res$status <- 401
+					  return(list(error = "Unauthorized"))
+				  }
+				  forward()
+			  })
+
+snippet prcors "CORS filter"
+	pr_filter(name = "cors", 
+			  handler = function(req, res) {
+				  res$setHeader("Access-Control-Allow-Origin", "*")
+				  res$setHeader("Access-Control-Allow-Methods", "GET,POST,PUT,DELETE")
+				  res$setHeader("Access-Control-Allow-Headers", "Content-Type,Authorization")
+				  
+				  if (req$REQUEST_METHOD == "OPTIONS") {
+					  res$status <- 200
+					  return("")
+				  }
+				  forward()
+			  })
+
+snippet prlog "Logging filter"
+	pr_filter(name = "log", 
+			  handler = function(req, res) {
+				  ${1:cat}(paste(Sys.time(), req$REQUEST_METHOD, req$PATH_INFO, "\n"))
+				  forward()
+			  })
+
+# ─────────────────────────────────────────────────────────────
+# Error Handling & Middleware
+
+snippet pr404 "Custom 404 handler"
+	pr_set_404(handler = function(req, res) {
+		res$status <- 404
+		list(error = "Endpoint not found", path = req$PATH_INFO)
+	})
+
+snippet prerror "Global error handler"
+	pr_set_error(handler = function(req, res, err) {
+		res$status <- 500
+		list(
+			error = "Internal server error",
+			message = err$message,
+			timestamp = Sys.time()
+		)
+	})
+
+snippet prpreempt "Preempt specific filter"
+	pr_get(path = "/${1:endpoint}", 
+		   handler = function() {
+			   ${2:# This endpoint bypasses filters}
+			   list(result = "no filters")
+		   },
+		   preempt = c("${3:auth}", "${4:log}"))
+
+# ─────────────────────────────────────────────────────────────
+# Advanced Configuration
+
+snippet prstatic "Serve static files"
+	pr_static(path = "${1:/static}", 
+			  direc = "${2:./www}")
+
+snippet prmount "Mount sub-router"
+	${1:sub_api} <- pr() |>
+		pr_get("/${2:sub_endpoint}", ${3:handler})
+	
+	pr_mount(path = "/${4:api/v1}", 
+			 router = ${1:sub_api})
+
+snippet prdocs "Configure API docs"
+	pr_set_docs(docs = "${1:swagger}", 
+				title = "${2:API Title}",
+				description = "${3:API Description}")
+
+snippet prapi "Set API specification"
+	pr_set_api_spec(api = function(spec) {
+		spec$info$title <- "${1:My API}"
+		spec$info$description <- "${2:API Description}"
+		spec$info$version <- "${3:1.0.0}"
+		spec
+	})
+
+snippet prhook "Add plumber hooks"
+	pr_hook(stage = "${1:preroute}", 
+			handler = function(data, req, res) {
+				${2:# Pre-route logic}
+			}) |>
+	pr_hook(stage = "${3:postroute}", 
+			handler = function(data, req, res, value) {
+				${4:# Post-route logic}
+			})
+
+snippet prparser "Set request parser"
+	pr_set_parsers(parsers = c("${1:json}", "${2:form}"))
+
+snippet prserial "Set response serializer"
+	pr_set_serializer(serializer = serializer_${1:json}())
+
+# ─────────────────────────────────────────────────────────────
+# Complete API Templates
+
+snippet prfull "Full API with error handling"
+	library(plumber)
+	
+	${1:api} <- pr() |>
+		# CORS Filter
+		pr_filter(name = "cors", handler = function(req, res) {
+			res$setHeader("Access-Control-Allow-Origin", "*")
+			res$setHeader("Access-Control-Allow-Methods", "GET,POST,PUT,DELETE")
+			res$setHeader("Access-Control-Allow-Headers", "Content-Type,Authorization")
+			if (req$REQUEST_METHOD == "OPTIONS") {
+				res$status <- 200
+				return("")
+			}
+			forward()
+		}) |>
+		
+		# Endpoints
+		pr_get(path = "/health", handler = function() {
+			list(status = "healthy", timestamp = Sys.time())
+		}) |>
+		pr_get(path = "/${2:endpoint}", handler = function(${3:param} = "${4:default}") {
+			${5:# Your logic here}
+			list(result = ${3:param})
+		}) |>
+		
+		# Error handling
+		pr_set_404(handler = function(req, res) {
+			res$status <- 404
+			list(error = "Not found", path = req$PATH_INFO)
+		}) |>
+		pr_set_error(handler = function(req, res, err) {
+			res$status <- 500
+			list(error = "Internal error", message = err$message)
+		}) |>
+		
+		# Documentation
+		pr_set_docs(docs = "swagger", title = "${6:My API}")
+
+snippet prdata "Data Science API template"
+	library(plumber)
+	library(data.table)
+	
+	${1:api} <- pr() |>
+		# Data endpoint
+		pr_get(path = "/data", handler = function(${2:filter} = NULL) {
+			dt <- ${3:your_data_table}
+			if (!is.null(${2:filter})) {
+				dt <- dt[${4:filter_condition}]
+			}
+			dt
+		}, serializer = serializer_json()) |>
+		
+		# Summary endpoint
+		pr_get(path = "/summary", handler = function() {
+			dt <- ${3:your_data_table}
+			list(
+				rows = nrow(dt),
+				cols = ncol(dt),
+				summary = summary(dt)
+			)
+		}) |>
+		
+		# Plot endpoint
+		pr_get(path = "/plot", handler = function(${5:x} = "${6:default_x}", ${7:y} = "${8:default_y}") {
+			dt <- ${3:your_data_table}
+			plot(dt[[${5:x}]], dt[[${7:y}]], 
+				 xlab = ${5:x}, ylab = ${7:y})
+		}, serializer = serializer_png()) |>
+		
+		# Health check
+		pr_get(path = "/health", handler = function() {
+			list(status = "healthy", timestamp = Sys.time())
+		})
+
+# ─────────────────────────────────────────────────────────────
+# Common Patterns
+
+snippet precho "Echo endpoint"
+	pr_get(path = "/echo", 
+		   handler = function(msg = "") {
+			   list(msg = paste0("The message is: '", msg, "'"))
+		   })
+
+snippet prsum "Sum endpoint"
+	pr_post(path = "/sum", 
+			handler = function(a, b) {
+				as.numeric(a) + as.numeric(b)
+			})
+
+snippet prpredict "Prediction endpoint with data.table"
+	pr_post(path = "/predict", 
+			handler = function(${1:features}) {
+				# Load model
+				model <- ${2:readRDS("model.rds")}
+				
+				# Prepare data with data.table
+				input_dt <- data.table::data.table(${1:features})
+				
+				# Make prediction
+				prediction <- predict(model, input_dt)
+				
+				list(
+					prediction = prediction,
+					timestamp = Sys.time(),
+					features_received = ${1:features}
+				)
+			})
+
+snippet prhealth "Health check endpoint"
+	pr_get(path = "/health", 
+		   handler = function() {
+			   list(
+				   status = "healthy",
+				   timestamp = Sys.time(),
+				   version = "${1:1.0.0}",
+				   r_version = R.version.string
+			   )
+		   })
+
+snippet prstatus "System status endpoint"
+	pr_get(path = "/status", 
+		   handler = function() {
+			   gc_info <- gc()
+			   list(
+				   status = "running",
+				   timestamp = Sys.time(),
+				   memory_used = sum(gc_info[, "used"]),
+				   r_version = R.version.string,
+				   loaded_packages = length(.packages())
+			   )
+		   })
+
+# ─────────────────────────────────────────────────────────────
+# Async Support (with future)
+
+snippet prasync "Async endpoint with future"
+	# Requires: library(future), library(promises)
+	pr_get(path = "/${1:async}", 
+		   handler = function(${2:param} = "${3:default}") {
+			   promises::future_promise({
+				   ${4:# Long running operation}
+				   Sys.sleep(${5:2})
+				   list(result = "completed", param = ${2:param})
+			   })
+		   })
+
+snippet prfuture "Setup future plan for API"
+	# Add at start of script
+	library(future)
+	library(promises)
+	future::plan("${1:multisession}")
+
+# ─────────────────────────────────────────────────────────────
+# Testing & Debugging
+
+snippet prdebug "Debug mode API"
+	pr_set_debug(debug = ${1:TRUE})
+
+snippet prverbose "Verbose API logging"
+	pr() |>
+		pr_filter(name = "log", handler = function(req, res) {
+			cat(sprintf("[%s] %s %s\n", 
+						Sys.time(), 
+						req$REQUEST_METHOD, 
+						req$PATH_INFO))
+			forward()
+		})
+
+# ─────────────────────────────────────────────────────────────
+# Deployment Helpers
+
+snippet prconnect "RStudio Connect deployment"
+	# For deployment to RStudio Connect
+	library(rsconnect)
+	
+	# Deploy the API
+	deployAPI(
+		api = "${1:api.R}",
+		server = "${2:connect-server}",
+		account = "${3:account-name}",
+		appTitle = "${4:My API}"
+	)
