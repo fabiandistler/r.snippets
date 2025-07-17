@@ -18,18 +18,18 @@ snippet progress
 
 
 ## Plotters
-snippet pc "Network plot of package"
+snippet plotnet "Network plot of package"
 	pkgnet::CreatePackageReport("${1:package}")
 
-snippet pd "Package deps"
+snippet plotpkgdeps "Package deps"
 	library("${1:package}")
 	pkgdepR::deps("${1:package}") |>
 		plot()
 
-snippet fv "UML of function"
+snippet plotuml "UML of function"
 	flow::flow_view(${1:function})
 
-snippet fd "Who is using function"
+snippet plotfdeps "Who is using function"
 	flow::flow_view_deps(${1:function})
 
 ## renv
