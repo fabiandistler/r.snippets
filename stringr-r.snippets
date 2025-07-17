@@ -8,9 +8,6 @@ snippet strdet "Detect pattern in string"
 snippet strlike "SQL-like pattern matching"
 	stringr::str_like(${1:string}, "${2:pattern}")
 
-snippet strilike "Case-insensitive SQL-like matching"
-	stringr::str_ilike(${1:string}, "${2:pattern}")
-
 snippet strwhich "Which elements match pattern"
 	stringr::str_which(${1:string}, "${2:pattern}")
 
@@ -49,29 +46,6 @@ snippet strrema "Remove all pattern matches"
 	stringr::str_remove_all(${1:string}, "${2:pattern}")
 
 # ─────────────────────────────────────────────────────────────
-# String Manipulation
-snippet strlen "String length"
-	stringr::str_length(${1:string})
-
-snippet strsub "Extract substring by position"
-	stringr::str_sub(${1:string}, ${2:start}, ${3:end})
-
-snippet strpad "Pad string to width"
-	stringr::str_pad(${1:string}, width = ${2:10}, side = "${3:left}", pad = "${4: }")
-
-snippet strtrunc "Truncate string to width"
-	stringr::str_trunc(${1:string}, width = ${2:20}, side = "${3:right}", ellipsis = "${4:...}")
-
-snippet strtrim "Trim whitespace"
-	stringr::str_trim(${1:string}, side = "${2:both}")
-
-snippet strsquish "Remove excess whitespace"
-	stringr::str_squish(${1:string})
-
-snippet strwrap "Wrap strings to width"
-	stringr::str_wrap(${1:string}, width = ${2:80}, indent = ${3:0}, exdent = ${4:0})
-
-# ─────────────────────────────────────────────────────────────
 # Combination & Splitting
 snippet strc "Combine strings"
 	stringr::str_c(${1:...}, sep = "${2:}", collapse = ${3:NULL})
@@ -81,21 +55,6 @@ snippet strglue "Glue strings with interpolation"
 
 snippet strflat "Flatten character vector"
 	stringr::str_flatten(${1:string}, collapse = "${2:}")
-
-snippet strflatc "Flatten with comma separation"
-	stringr::str_flatten_comma(${1:string}, last = "${2: and }")
-
-snippet strsplit "Split string by pattern"
-	stringr::str_split(${1:string}, "${2:pattern}", n = ${3:Inf})
-
-snippet strsplit1 "Split single string"
-	stringr::str_split_1(${1:string}, "${2:pattern}")
-
-snippet strspliti "Split with fixed number"
-	stringr::str_split_i(${1:string}, "${2:pattern}", ${3:i})
-
-snippet strsplitf "Split into fixed columns"
-	stringr::str_split_fixed(${1:string}, "${2:pattern}", ${3:n})
 
 # ─────────────────────────────────────────────────────────────
 # Case Conversion
@@ -116,12 +75,6 @@ snippet strsentence "Convert to sentence case"
 snippet strsort "Sort strings"
 	stringr::str_sort(${1:string}, decreasing = ${2:FALSE}, locale = "${3:en}")
 
-snippet strorder "Get string order"
-	stringr::str_order(${1:string}, decreasing = ${2:FALSE}, locale = "${3:en}")
-
-snippet strequal "Compare strings with locale"
-	stringr::str_equal(${1:x}, ${2:y}, locale = "${3:en}", ignore_case = ${4:FALSE})
-
 # ─────────────────────────────────────────────────────────────
 # Pattern Modifiers
 snippet strfixed "Fixed pattern (no regex)"
@@ -129,23 +82,6 @@ snippet strfixed "Fixed pattern (no regex)"
 
 snippet strregex "Regex pattern with options"
 	stringr::regex("${1:pattern}", ignore_case = ${2:FALSE}, multiline = ${3:FALSE})
-
-snippet strcoll "Collation pattern for locale"
-	stringr::coll("${1:pattern}", ignore_case = ${2:FALSE}, locale = "${3:en}")
-
-snippet strboundary "Text boundary pattern"
-	stringr::boundary("${1:word}", skip_word_none = ${2:NA})
-
-# ─────────────────────────────────────────────────────────────
-# Advanced Patterns
-snippet strescape "Escape regex metacharacters"
-	stringr::str_escape(${1:string})
-
-snippet strview "View regex matches interactively"
-	stringr::str_view(${1:string}, "${2:pattern}")
-
-snippet strviewa "View all regex matches"
-	stringr::str_view_all(${1:string}, "${2:pattern}")
 
 # ─────────────────────────────────────────────────────────────
 # Data Science Workflows (data.table compatible)
@@ -165,14 +101,3 @@ snippet strextract "Extract and clean"
 	${1:DT}[, ${2:new_col} := stringr::str_extract(${3:text_col}, "${4:pattern}") |>
 		stringr::str_remove_all("${5:noise_pattern}") |>
 		stringr::str_trim()]
-
-# ─────────────────────────────────────────────────────────────
-# Professional Validation
-snippet strvld "Validate string format"
-	stopifnot(all(stringr::str_detect(${1:strings}, "${2:required_pattern}"), na.rm = TRUE))
-
-snippet strlog "Log string operations"
-	cat("Processing", length(${1:strings}), "strings with pattern:", "${2:pattern}", "\n")
-	${3:result} <- stringr::str_${4:function}(${1:strings}, "${2:pattern}")
-	cat("Result:", sum(!is.na(${3:result})), "successful operations\n")
-	${0}
