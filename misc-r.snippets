@@ -6,15 +6,6 @@ snippet rr "Refactor"
 ## pak
 snippet pakp "Pak install package"
 	pak::pak("${1:package}")
-	
-snippet pakd "pak::pkg_deps() - Show dependencies of a package"
-	pak::pkg_deps("${1:pkg}")
-
-snippet pakdt "pak::pkg_deps_tree() - Show dependency tree of a package"
-	pak::pkg_deps_tree("${1:pkg}")
-
-snippet pakde "pak::pkg_deps_explain() - Explain why a package is needed"
-	pak::pkg_deps_explain("${1:pkg}")
 
 snippet pakl "pak::local_deps() - Show dependencies of local package"
 	pak::local_deps()
@@ -77,7 +68,7 @@ snippet pretty "Pretty formatting - choose function"
 
 ## btw
 snippet btw "Describe R objects for LLM context"
-	btw::btw(${1:object}, ${2:clipboard = FALSE})
+	btw::btw(${1:object}, clipboard = FALSE)
 
 snippet btwcf "Describe current file/selection for LLM"
 	btw::btw("${1:@current_file}")
