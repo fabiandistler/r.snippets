@@ -9,8 +9,8 @@ snippet dtorder "sort without changing key"
 
 snippet dtagg "group aggregation: sum, mean, .N, uniqueN"
 	${1:DT}[${2:cond}${3:, }, .(
-	  Sum = base::sum(${4:col}, na.rm = TRUE),
-	  Mean = base::mean(${4:col}, na.rm = TRUE),
+	  Sum = sum(${4:col}, na.rm = TRUE),
+	  Mean = mean(${4:col}, na.rm = TRUE),
 		n = .N,
 		Unique_n = data.table::uniqueN(${4:col})
 	), by = ${5:group}]
@@ -63,7 +63,7 @@ snippet dtcj "cartesian product of vectors"
 	${0}
 
 snippet dttic "start timer"
-  started.at=proc.time()
+  started.at <- proc.time()
 
 snippet dttoc "stop timer"
   cat("Finished in",data.table::timetaken(started.at),"\n")
