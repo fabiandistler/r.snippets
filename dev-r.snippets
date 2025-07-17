@@ -199,24 +199,8 @@ snippet lcexp "Mark function as experimental"
 	lifecycle::signal_stage("experimental", "${1:function_name()}")
 	${0}
 
-snippet lcstable "Mark function as stable"
-	lifecycle::signal_stage("stable", "${1:function_name()}")
-	${0}
-
 snippet lcsup "Mark function as superseded"
 	lifecycle::signal_stage("superseded", "${1:function_name()}")
-	${0}
-
-
-# Conditional deprecation
-snippet lccond "Conditional deprecation warning"
-	if (${1:condition}) {
-		lifecycle::deprecate_warn(
-			when = "${2:1.0.0}",
-			what = "${3:function_name()}(${4:arg})",
-			details = "${5:Additional context}"
-		)
-	}
 	${0}
 
 # Advanced deprecation patterns
@@ -263,13 +247,4 @@ snippet lctestno "Test no deprecation warning"
 	expect_no_warning(${1:function_call()})
 	${0}
 
-# Documentation helpers
-snippet lcinherit "Inherit lifecycle badge"
-	#' @inheritParams ${1:function_name}
-	#' @inherit ${1:function_name} return
-	${0}
 
-snippet lcdetails "Add lifecycle details section"
-	#' @section Lifecycle:
-	#' ${1:This function is experimental and the interface may change.}
-	${0}
