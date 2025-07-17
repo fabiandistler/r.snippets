@@ -167,12 +167,12 @@ snippet fssizehuman "Get human readable file size"
 # ─────────────────────────────────────────────────────────────
 # Common Workflows
 
-snippet fsworkflow "Common file check and create workflow"
+snippet fsfileexists "Create file, if not exists"
 	if (!fs::file_exists("${1:path}")) {
 		fs::file_create("${1:path}")
 	}
 
-snippet fsdworkflow "Common directory check and create workflow"
+snippet fsdirexists "Create dir, if not exists"
 	if (!fs::dir_exists("${1:path}")) {
 		fs::dir_create("${1:path}")
 	}
