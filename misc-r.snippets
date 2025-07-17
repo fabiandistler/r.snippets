@@ -4,7 +4,7 @@ snippet rr "Refactor"
 	`%refactor%` <- refactor::`%refactor%`
 
 ## pak
-snippet pp "Pak install package"
+snippet pakp "Pak install package"
 	pak::pak("${1:package}")
 	
 snippet pakd "pak::pkg_deps() - Show dependencies of a package"
@@ -77,7 +77,7 @@ snippet pretty "Pretty formatting - choose function"
 
 ## btw
 snippet btw "Describe R objects for LLM context"
-	btw::btw(${1:object}, ${2:clipboard = TRUE})
+	btw::btw(${1:object}, ${2:clipboard = FALSE})
 
 snippet btwcf "Describe current file/selection for LLM"
 	btw::btw("${1:@current_file}")
