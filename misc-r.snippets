@@ -453,5 +453,9 @@ snippet shinymod
 	  )
 	}
 
-snippet context
-  pkglite::collate(".", pkglite::file_default()) |> pkglite::pack()
+snippet context "Export complete package as text file"
+	pkglite::collate(
+		".",
+		pkglite::file_default()
+		) |>
+	pkglite::pack()
