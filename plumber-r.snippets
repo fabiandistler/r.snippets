@@ -272,39 +272,8 @@ snippet prfull "Full API with error handling"
 		}) |>
 		
 		# Documentation
-		pr_set_docs(docs = "swagger", title = "${6:My API}")
-
-snippet prdata "Data Science API template"
-	library(plumber)
-	library(data.table)
+		pr_set_docs(docs = "swagger", title = "${6:My API}") |>
 	
-	${1:api} <- pr() |>
-		# Data endpoint
-		pr_get(path = "/data", handler = function(${2:filter} = NULL) {
-			dt <- ${3:your_data_table}
-			if (!is.null(${2:filter})) {
-				dt <- dt[${4:filter_condition}]
-			}
-			dt
-		}, serializer = serializer_json()) |>
-		
-		# Summary endpoint
-		pr_get(path = "/summary", handler = function() {
-			dt <- ${3:your_data_table}
-			list(
-				rows = nrow(dt),
-				cols = ncol(dt),
-				summary = summary(dt)
-			)
-		}) |>
-		
-		# Plot endpoint
-		pr_get(path = "/plot", handler = function(${5:x} = "${6:default_x}", ${7:y} = "${8:default_y}") {
-			dt <- ${3:your_data_table}
-			plot(dt[[${5:x}]], dt[[${7:y}]], 
-				 xlab = ${5:x}, ylab = ${7:y})
-		}, serializer = serializer_png()) |>
-		
 		# Health check
 		pr_get(path = "/health", handler = function() {
 			list(status = "healthy", timestamp = Sys.time())
@@ -312,18 +281,6 @@ snippet prdata "Data Science API template"
 
 # ─────────────────────────────────────────────────────────────
 # Common Patterns
-
-snippet precho "Echo endpoint"
-	pr_get(path = "/echo", 
-		   handler = function(msg = "") {
-			   list(msg = paste0("The message is: '", msg, "'"))
-		   })
-
-snippet prsum "Sum endpoint"
-	pr_post(path = "/sum", 
-			handler = function(a, b) {
-				as.numeric(a) + as.numeric(b)
-			})
 
 snippet prpredict "Prediction endpoint with data.table"
 	pr_post(path = "/predict", 
@@ -372,7 +329,6 @@ snippet prstatus "System status endpoint"
 # Async Support (with future)
 
 snippet prasync "Async endpoint with future"
-	# Requires: library(future), library(promises)
 	pr_get(path = "/${1:async}", 
 		   handler = function(${2:param} = "${3:default}") {
 			   promises::future_promise({
@@ -382,39 +338,9 @@ snippet prasync "Async endpoint with future"
 			   })
 		   })
 
-snippet prfuture "Setup future plan for API"
-	# Add at start of script
-	library(future)
-	library(promises)
-	future::plan("${1:multisession}")
 
 # ─────────────────────────────────────────────────────────────
 # Testing & Debugging
 
 snippet prdebug "Debug mode API"
 	pr_set_debug(debug = ${1:TRUE})
-
-snippet prverbose "Verbose API logging"
-	pr() |>
-		pr_filter(name = "log", handler = function(req, res) {
-			cat(sprintf("[%s] %s %s\n", 
-						Sys.time(), 
-						req$REQUEST_METHOD, 
-						req$PATH_INFO))
-			forward()
-		})
-
-# ─────────────────────────────────────────────────────────────
-# Deployment Helpers
-
-snippet prconnect "RStudio Connect deployment"
-	# For deployment to RStudio Connect
-	library(rsconnect)
-	
-	# Deploy the API
-	deployAPI(
-		api = "${1:api.R}",
-		server = "${2:connect-server}",
-		account = "${3:account-name}",
-		appTitle = "${4:My API}"
-	)
