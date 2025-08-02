@@ -7,15 +7,6 @@ snippet dtorder "sort without changing key"
 	data.table::setorder(${1:DT}, ${2:-col})
 	${0}
 
-snippet dtagg "group aggregation: sum, mean, .N, uniqueN"
-	${1:DT}[${2:cond}${3:, }, .(
-	  Sum = sum(${4:col}, na.rm = TRUE),
-	  Mean = mean(${4:col}, na.rm = TRUE),
-		n = .N,
-		Unique_n = data.table::uniqueN(${4:col})
-	), by = ${5:group}]
-	${0}
-
 snippet dtjinner "inner join: matches only"
 	${1:DT1}[${2:DT2}, on = .(${3:key}), nomatch = 0]
 	${0}

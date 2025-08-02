@@ -2,12 +2,6 @@
 # ─────────────────────────────────────────────────────────────
 # File Operations
 
-snippet fsexists "Check if file/directory exists"
-	fs::file_exists("${1:path}")
-
-snippet fsdexists "Check if directory exists"
-	fs::dir_exists("${1:path}")
-
 snippet fsinfo "Get file information"
 	fs::file_info("${1:path}")
 
@@ -16,45 +10,6 @@ snippet fssize "Get file size"
 
 snippet fsaccess "Check file access permissions"
 	fs::file_access("${1:path}", mode = "${2:read}")
-
-# ─────────────────────────────────────────────────────────────
-# Create Operations
-
-snippet fscreate "Create file"
-	fs::file_create("${1:path}")
-
-snippet fsdcreate "Create directory"
-	fs::dir_create("${1:path}")
-
-snippet fstouch "Touch file (update timestamp)"
-	fs::file_touch("${1:path}")
-
-snippet fstemp "Create temporary file"
-	fs::file_temp(pattern = "${1:tmp}", ext = "${2:.txt}")
-
-snippet fstempdir "Create temporary directory"
-	fs::file_temp(pattern = "${1:tmpdir}", tmp_dir = TRUE)
-
-# ─────────────────────────────────────────────────────────────
-# Copy and Move Operations
-
-snippet fscopy "Copy file"
-	fs::file_copy("${1:source}", "${2:destination}")
-
-snippet fsdcopy "Copy directory"
-	fs::dir_copy("${1:source}", "${2:destination}")
-
-snippet fsmove "Move/rename file"
-	fs::file_move("${1:source}", "${2:destination}")
-
-# ─────────────────────────────────────────────────────────────
-# Delete Operations
-
-snippet fsdelete "Delete file"
-	fs::file_delete("${1:path}")
-
-snippet fsddelete "Delete directory"
-	fs::dir_delete("${1:path}")
 
 # ─────────────────────────────────────────────────────────────
 # Directory Operations
