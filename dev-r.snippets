@@ -152,5 +152,37 @@ snippet lcsup "Mark function as superseded"
 	lifecycle::signal_stage("superseded", "${1:function_name()}")
 	${0}
 
+# R Error Handling Snippets
+
+snippet trycatch “Basic tryCatch with error handling”
+	tryCatch(
+		expr = {
+			${1:# Code that might fail}
+		},
+		error = function(e) {
+			${2:# Handle error}
+			message(“Error: “, e$message)
+			${3:return(NULL)}
+		}
+	)
+
+
+snippet trychain “Chain multiple tryCatch attempts”
+	result <- tryCatch(
+		expr = {
+			${1:# Primary method}
+		},
+		error = function(e1) {
+			tryCatch(
+				expr = {
+					${2:# Fallback method}
+				},
+				error = function(e2) {
+					${3:# Final fallback or error}
+					stop(“All methods failed. Primary: “, e1$message, “. Fallback: “, e2$message)
+				}
+			)
+		}
+	)
 
 
