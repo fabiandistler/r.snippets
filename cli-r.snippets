@@ -5,7 +5,7 @@
 # CORE PATTERN - Most flexible cli::cli_abort structure
 # =============================================================================
 
-snippet ca "cli abort - flexible error with all options"
+snippet clia "cli abort - flexible error with all options"
 	cli::cli_abort(c(
 		# Main problem statement (always end with period)
 		"${1:What went wrong}.",
@@ -31,14 +31,14 @@ snippet ca "cli abort - flexible error with all options"
 # SIMPLE PATTERNS - For common quick cases
 # =============================================================================
 
-snippet cas "cli abort - simple one-liner"
+snippet clias "cli abort - simple one-liner"
 	cli::cli_abort("${1:Subject} ${2:must be|can't} ${3:expectation}${4:, not actual}.")
 
 # =============================================================================
 # VALIDATION PATTERNS - For argument/type checking
 # =============================================================================
 
-snippet cav "cli abort - validation with smart type detection"
+snippet cliav "cli abort - validation with smart type detection"
 	cli::cli_abort(c(
 		# Choose pattern based on clarity:
 		# Clear expectation: "{.arg x} must be Y, not Z"
@@ -52,34 +52,18 @@ snippet cav "cli abort - validation with smart type detection"
 		#"i" = "Did you mean {.code correct_syntax}?"
 	))
 
-snippet cavs "cli abort - size/length validation"
-	cli::cli_abort(c(
-		"${1:Objects|Columns} must have compatible ${2:sizes|lengths}.",
-		# List each size issue
-		"x" = "${3:Size|Length} {${4:actual1}}: ${5:Description1}.",
-		"x" = "${6:Size|Length} {${7:actual2}}: ${8:Description2}.",
-		# Standard recycling message if applicable
-		"i" = "Only values of ${9:size|length} one are recycled."
-	))
-
-# =============================================================================
-# DATA FRAME / COLUMN PATTERNS
-# =============================================================================
-
-snippet cad "cli abort - data/column operations"
-	cli::cli_abort(
-		# Common patterns:
-		# "Can't find column {.field col} in {.arg .data}"
-		# "Column {.field col} must be numeric"
-		# "Can't select columns that don't exist"
-		"Can't ${1:find|use|select} ${2:column} {.field ${3:name}} ${4:in {.arg .data}}."
-	)
-
 # =============================================================================
 # MISC
 # =============================================================================
 
-snippet ch "Create header"
+snippet clih "Create header"
 	cli::cli_h${1:1|2|3}("${2:header}")
+
+snippet cliprogress
+	${1:dt}[, {
+		for (i in cli::cli_progress_along(.I)) {
+			${2:# Code for .SD[i] or .I[i]}
+		}
+	}, by = ${3:grp}]
 
 
