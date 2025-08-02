@@ -2,45 +2,16 @@
 
 # ─────────────────────────────────────────────────────────────
 # Detection & Matching
-snippet strdet "Detect pattern in string"
-	stringr::str_detect(${1:string}, "${2:pattern}")
-
-snippet strlike "SQL-like pattern matching"
-	stringr::str_like(${1:string}, "${2:pattern}")
-
-snippet strwhich "Which elements match pattern"
-	stringr::str_which(${1:string}, "${2:pattern}")
-
-snippet strcount "Count pattern matches"
-	stringr::str_count(${1:string}, "${2:pattern}")
 
 snippet strsub "Subset matching strings"
 	stringr::str_subset(${1:string}, "${2:pattern}")
 
-# ─────────────────────────────────────────────────────────────
-# Extraction
-snippet strext "Extract first pattern match"
-	stringr::str_extract(${1:string}, "${2:pattern}")
-
-snippet strexa "Extract all pattern matches"
-	stringr::str_extract_all(${1:string}, "${2:pattern}")
-
-snippet strloc "Locate pattern positions"
-	stringr::str_locate(${1:string}, "${2:pattern}")
-
-snippet strloca "Locate all pattern positions"
-	stringr::str_locate_all(${1:string}, "${2:pattern}")
 
 # ─────────────────────────────────────────────────────────────
 # Replacement & Removal
-snippet strrep "Replace first pattern match"
-	stringr::str_replace(${1:string}, "${2:pattern}", "${3:replacement}")
 
 snippet strrepa "Replace all pattern matches"
 	stringr::str_replace_all(${1:string}, "${2:pattern}", "${3:replacement}")
-
-snippet strrem "Remove first pattern match"
-	stringr::str_remove(${1:string}, "${2:pattern}")
 
 snippet strrema "Remove all pattern matches"
 	stringr::str_remove_all(${1:string}, "${2:pattern}")
@@ -50,25 +21,8 @@ snippet strrema "Remove all pattern matches"
 snippet strc "Combine strings"
 	stringr::str_c(${1:...}, sep = "${2:}", collapse = ${3:NULL})
 
-snippet strglue "Glue strings with interpolation"
-	stringr::str_glue("${1:template with {${2:var}}}")
-
 snippet strflat "Flatten character vector"
 	stringr::str_flatten(${1:string}, collapse = "${2:}")
-
-# ─────────────────────────────────────────────────────────────
-# Case Conversion
-snippet strlower "Convert to lowercase"
-	stringr::str_to_lower(${1:string}, locale = "${2:en}")
-
-snippet strupper "Convert to uppercase"
-	stringr::str_to_upper(${1:string}, locale = "${2:en}")
-
-snippet strtitle "Convert to title case"
-	stringr::str_to_title(${1:string}, locale = "${2:en}")
-
-snippet strsentence "Convert to sentence case"
-	stringr::str_to_sentence(${1:string}, locale = "${2:en}")
 
 # ─────────────────────────────────────────────────────────────
 # Sorting & Ordering
@@ -76,28 +30,8 @@ snippet strsort "Sort strings"
 	stringr::str_sort(${1:string}, decreasing = ${2:FALSE}, locale = "${3:en}")
 
 # ─────────────────────────────────────────────────────────────
-# Pattern Modifiers
-snippet strfixed "Fixed pattern (no regex)"
-	stringr::fixed("${1:pattern}", ignore_case = ${2:FALSE})
-
-snippet strregex "Regex pattern with options"
-	stringr::regex("${1:pattern}", ignore_case = ${2:FALSE}, multiline = ${3:FALSE})
-
-# ─────────────────────────────────────────────────────────────
 # Data Science Workflows (data.table compatible)
 snippet strclean "Clean text data pipeline"
 	${1:DT}[, ${2:clean_col} := stringr::str_to_lower(${3:text_col})] |>
 		.[, ${2:clean_col} := stringr::str_trim(${2:clean_col})] |>
 		.[, ${2:clean_col} := stringr::str_squish(${2:clean_col})]
-
-snippet strparse "Parse structured text"
-	${1:DT}[, c("${2:col1}", "${3:col2}", "${4:col3}") := 
-		stringr::str_match(${5:text_col}, "${6:pattern}")[, 2:4]]
-
-snippet strflag "Create text flags"
-	${1:DT}[, ${2:flag_col} := stringr::str_detect(${3:text_col}, "${4:pattern}")]
-
-snippet strextract "Extract and clean"
-	${1:DT}[, ${2:new_col} := stringr::str_extract(${3:text_col}, "${4:pattern}") |>
-		stringr::str_remove_all("${5:noise_pattern}") |>
-		stringr::str_trim()]
