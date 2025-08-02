@@ -1,146 +1,85 @@
 # purrr Functional Programming Snippets
 
 ## Map Family (Core Functions)
-snippet pmap2 "Apply function to pairs from two vectors"
+snippet purmap2 "Apply function to pairs from two vectors"
 	purrr::map2(${1:x}, ${2:y}, ${3:~.x})
 
-snippet ppmap "Apply function to multiple vectors"
+snippet purpmap "Apply function to multiple vectors"
 	purrr::pmap(list(${1:x}, ${2:y}, ${3:z}), ${4:function(...)})
 
 
 ## Map Variants (Conditional and Selective)
-snippet pmapif "Apply function conditionally where predicate is TRUE"
+snippet purmapif "Apply function conditionally where predicate is TRUE"
 	purrr::map_if(${1:x}, ${2:is.numeric}, ${3:~.x * 2})
 
-snippet pmapat "Apply function at specific positions"
+snippet purmapat "Apply function at specific positions"
 	purrr::map_at(${1:x}, ${2:c(1, 3)}, ${3:~.x^2})
 
-snippet pmapmod "Modify list in place"
+snippet purmod "Modify list in place"
 	purrr::modify(${1:x}, ${2:~.x})
 
-snippet pmapmodif "Modify conditionally in place"
+snippet purmodif "Modify conditionally in place"
 	purrr::modify_if(${1:x}, ${2:is.numeric}, ${3:~round(.x, 2)})
 
-snippet pmapmodat "Modify at specific positions in place"
+snippet purmodat "Modify at specific positions in place"
 	purrr::modify_at(${1:x}, ${2:c("col1", "col2")}, ${3:as.factor})
 
 ## Walk Functions (Side Effects)
-snippet pwalk "Apply function for side effects"
+snippet purwalk "Apply function for side effects"
 	purrr::walk(${1:x}, ${2:print})
 
-snippet pwalk2 "Apply function to pairs for side effects"
+snippet purwalk2 "Apply function to pairs for side effects"
 	purrr::walk2(${1:x}, ${2:y}, ${3:~cat(.x, ":", .y, "\n")})
 
-snippet ppwalk "Apply function to multiple inputs for side effects"
+snippet purpwalk "Apply function to multiple inputs for side effects"
 	purrr::pwalk(list(${1:x}, ${2:y}), ${3:function(a, b) cat(a, b, "\n")})
 
 
 ## Predicate Functions
-snippet pkeep "Keep elements matching predicate"
+snippet purkeep "Keep elements matching predicate"
 	purrr::keep(${1:x}, ${2:is.numeric})
 
-snippet pdiscard "Remove elements matching predicate"
+snippet purdiscard "Remove elements matching predicate"
 	purrr::discard(${1:x}, ${2:is.na})
 
-snippet pcompact "Remove NULL and empty elements"
+snippet purcompact "Remove NULL and empty elements"
 	purrr::compact(${1:x})
 
-snippet pdetect "Find first element matching predicate"
-	purrr::detect(${1:x}, ${2:~.x > 10})
-
-snippet pdetecti "Find index of first matching element"
-	purrr::detect_index(${1:x}, ${2:~.x > 10})
-
-snippet phas "Check if elements have names/indices"
-	purrr::has_element(${1:x}, ${2:"name"})
-
-snippet pevery "Test if all elements satisfy predicate"
-	purrr::every(${1:x}, ${2:is.numeric})
-
-snippet psome "Test if any element satisfies predicate"
-	purrr::some(${1:x}, ${2:is.na})
-
-snippet pnone "Test if no element satisfies predicate"
-	purrr::none(${1:x}, ${2:is.na})
-
 ## Reduce Functions
-snippet preduce "Combine elements with binary function"
+snippet purreduce "Combine elements with binary function"
 	purrr::reduce(${1:x}, ${2:`+`})
 
-snippet preducel "Reduce from left with starting value"
-	purrr::reduce(${1:x}, ${2:`+`}, .init = ${3:0})
-
-snippet preducer "Reduce from right"
-	purrr::reduce_right(${1:x}, ${2:paste}, .init = ${3:""})
-
-snippet paccumulate "Iterative reduce showing intermediate results"
-	purrr::accumulate(${1:x}, ${2:`+`})
-
-snippet paccumr "Accumulate from right"
-	purrr::accumulate_right(${1:x}, ${2:`+`})
-
 ## List Manipulation
-snippet pflatten "Flatten one level of list hierarchy"
+snippet purflatten "Flatten one level of list hierarchy"
 	purrr::flatten(${1:x})
 
-snippet plistc "Combine vectors into list"
-	purrr::list_c(${1:x})
-
-snippet plistrbind "Row-bind list of data.frames"
-	purrr::list_rbind(${1:x})
-
-snippet plistcbind "Column-bind list of data.frames"
-	purrr::list_cbind(${1:x})
-
 ## Advanced Functional Programming
-snippet pcompose "Compose multiple functions"
+snippet purcompose "Compose multiple functions"
 	purrr::compose(${1:fun1}, ${2:fun2}, ${3:fun3})
 
-snippet ppartial "Partially apply function arguments"
-	purrr::partial(${1:function}, ${2:arg1} = ${3:value})
-
-snippet pnegate "Negate a predicate function"
-	purrr::negate(${1:is.na})
-
-snippet ppossibly "Safely handle errors with default value"
+snippet purpossibly "Safely handle errors with default value"
 	purrr::possibly(${1:function}, ${2:otherwise = NA})
 
-snippet pquietly "Capture output, messages, warnings"
+snippet purquietly "Capture output, messages, warnings"
 	purrr::quietly(${1:function})(${2:args})
 
-snippet psafely "Capture errors without stopping"
+snippet pursafely "Capture errors without stopping"
 	purrr::safely(${1:function})(${2:args})
 
-snippet pautobrowse "Debug function automatically on error"
+snippet purautobrowse "Debug function automatically on error"
 	purrr::auto_browse(${1:function})
 
 ## Plucking and Extracting
-snippet ppluck "Extract element by position or name"
+snippet purpluck "Extract element by position or name"
 	purrr::pluck(${1:x}, ${2:1}, ${3:"name"})
 
-snippet pchuck "Extract element (error if missing)"
+snippet purchuck "Extract element (error if missing)"
 	purrr::chuck(${1:x}, ${2:"name"})
 
-snippet pattr "Extract attribute safely"
-	purrr::attr_getter(${1:"attr_name"})(${2:x})
-
-## Set Operations
-snippet psetnames "Set names for list/vector"
-	purrr::set_names(${1:x}, ${2:c("a", "b", "c")})
-
-
 ## Error Handling Patterns
-snippet ptrysafely "Safe operation with error capture"
+snippet purtrysafely "Safe operation with error capture"
 	${1:safe_fun} <- purrr::safely(${2:risky_function})
 	${3:results} <- purrr::map(${4:inputs}, ${1:safe_fun})
 	${5:errors} <- purrr::transpose(${3:results})$error
 	${6:successes} <- purrr::transpose(${3:results})$result
-
-snippet ptryquietly "Quiet operation capturing messages"
-	${1:quiet_fun} <- purrr::quietly(${2:noisy_function})
-	${3:results} <- purrr::map(${4:inputs}, ${1:quiet_fun})
-
-snippet ptrypossibly "Robust operation with fallback"
-	${1:robust_fun} <- purrr::possibly(${2:function}, ${3:otherwise = NA})
-	${4:results} <- purrr::map(${5:inputs}, ${1:robust_fun})
 
