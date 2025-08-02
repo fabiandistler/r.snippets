@@ -9,14 +9,6 @@ snippet ll "lint current file"
 snippet ff
 	flir::fix(path = rstudioapi::getSourceEditorContext()\$path)
 
-snippet progress
-	${1:dt}[, {
-		for (i in cli::cli_progress_along(.I)) {
-			${2:# Code for .SD[i] or .I[i]}
-		}
-	}, by = ${3:grp}]
-
-
 ## Plotters
 snippet plotnet "Network plot of package"
 	pkgnet::CreatePackageReport("${1:package}")
@@ -26,10 +18,10 @@ snippet plotpkgdeps "Package deps"
 	pkgdepR::deps("${1:package}") |>
 		plot()
 
-snippet plotuml "UML of function"
+snippet flowv "UML of function"
 	flow::flow_view(${1:function})
 
-snippet plotfdeps "Who is using function"
+snippet flowdeps "Who is using function"
 	flow::flow_view_deps(${1:function})
 
 ## renv
@@ -63,30 +55,6 @@ snippet xf "Generate testthat tests for function arguments"
 		),
 		indentation = 2,
 		copy_env = FALSE
-	)
-
-snippet xc "Capture and test side effects (errors/warnings/messages)"
-	side_effects_${1:12345} <- xpectr::capture_side_effects(
-		${2:expression},
-		reset_seed = TRUE
-	)
-	expect_equal(
-		xpectr::strip(side_effects_${1:12345}[['warnings']]),
-		xpectr::strip(${3:"expected warning"}),
-		fixed = TRUE
-	)
-	expect_equal(
-		xpectr::strip(side_effects_${1:12345}[['messages']]),
-		xpectr::strip(${4:"expected message"}),
-		fixed = TRUE
-	)
-
-snippet xs "Suppress warnings/messages and test clean output"
-	output_${1:12345} <- xpectr::suppress_mw(${2:expression})
-	expect_equal(
-		output_${1:12345},
-		${3:expected_output},
-		${4:tolerance = 1e-4}
 	)
 
 
@@ -131,9 +99,6 @@ snippet assert_file_exists
 snippet assert_directory_exists
 	checkmate::assert_directory_exists(${1:"/path/to/directory"})
 
-snippet qassert "Compact assertion using format string syntax"
-	checkmate::qassert(${1:x}, "${2:format-string}")
-
 
 # lifecycle package snippets
 # ─────────────────────────────────────────────────────────────
@@ -174,20 +139,6 @@ snippet lcarg "Deprecate function argument"
 	}
 	${0}
 
-snippet lcreq "Require present argument"
-	if (!lifecycle::is_present(${1:arg})) {
-		lifecycle::deprecate_stop(
-			when = "${2:1.0.0}",
-			what = "${3:function_name()}(${1:arg})"
-		)
-	}
-	${0}
-
-# Badge documentation
-snippet lcbadge "Add lifecycle badge to function docs"
-	#' @lifecycle ${1:experimental}
-	${0}
-
 snippet lcparam "Add lifecycle to parameter docs"
 	#' @param ${1:arg} ${2:Description} `r lifecycle::badge("${3:deprecated}")`
 	${0}
@@ -201,48 +152,5 @@ snippet lcsup "Mark function as superseded"
 	lifecycle::signal_stage("superseded", "${1:function_name()}")
 	${0}
 
-# Advanced deprecation patterns
-snippet lcmsg "Custom deprecation message"
-	lifecycle::deprecate_warn(
-		when = "${1:1.0.0}",
-		what = "${2:function_name()}",
-		details = c(
-			"${3:Additional context}",
-			"${4:More details}"
-		)
-	)
-	${0}
-
-snippet lcrename "Function rename deprecation"
-	# In old function
-	lifecycle::deprecate_warn(
-		when = "${1:1.0.0}",
-		what = "${2:old_function()}",
-		with = "${3:new_function()}"
-	)
-	${3:new_function}(${4:...})
-	${0}
-
-snippet lcdata "Deprecate dataset"
-	lifecycle::deprecate_warn(
-		when = "${1:1.0.0}",
-		what = "${2:dataset}",
-		details = "Use `${3:new_dataset}` instead."
-	)
-	${0}
-
-# Testing lifecycle
-snippet lctest "Test deprecated function"
-	lifecycle::local_options(lifecycle_verbosity = "quiet")
-	expect_warning(
-		${1:deprecated_function()},
-		class = "lifecycle_warning_deprecated"
-	)
-	${0}
-
-snippet lctestno "Test no deprecation warning"
-	lifecycle::local_options(lifecycle_verbosity = "quiet")
-	expect_no_warning(${1:function_call()})
-	${0}
 
 
