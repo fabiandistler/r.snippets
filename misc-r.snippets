@@ -17,7 +17,7 @@ snippet pakid "pak::local_install_deps() - Install local package dependencies"
 	pak::local_install_deps()
 
 
-snippet fun "Function skeleton with try catch and error print"
+snippet function "Function skeleton with try catch and error print"
 	${1:name} <- function(${2:input}) {
 		tryCatch(
 			expr = {
@@ -33,7 +33,7 @@ snippet fun "Function skeleton with try catch and error print"
 			})
 	}
 
-snippet func "Compile function for speed"
+snippet compilefunction "Compile function for speed"
 	${1:compiled_fun} <- compiler::cmpfun(${2:fun_name})
 
 snippet mm "Cache function"
@@ -69,16 +69,6 @@ snippet pretty "Pretty formatting - choose function"
 ## btw
 snippet btw "Describe R objects for LLM context"
 	btw::btw(${1:object}, clipboard = FALSE)
-
-snippet btwcf "Describe current file/selection for LLM"
-	btw::btw("${1:@current_file}")
-
-snippet btwp "Describe R package documentation for LLM"
-	btw::btw("{${1:package_name}}")
-
-snippet btwh "Include help page in LLM context"
-	btw::btw("?${1:function_name}")
-
 
 # OOP
 
@@ -293,25 +283,6 @@ snippet s3class "Complete S3 class with constructor, validator, and print"
 		inherits(x, "${1:classname}")
 	}
 
-## data.table Integration Snippets
-snippet s3dt "S3 method for data.table compatibility"
-	as.data.table.${1:classname} <- function(x, ...) {
-		data.table::data.table(
-			value = as.vector(x),
-			${2:attr} = attr(x, "${2:attr}")
-		)
-	}
-
-snippet s3dtmethod "S3 method that returns data.table"
-	${1:method_name}.${2:classname} <- function(x, ...) {
-		dt <- data.table::data.table(
-			value = as.vector(x),
-			${3:attr} = attr(x, "${3:attr}")
-		)
-		dt[, ${4:calculation} := ${5:expression}]
-		dt[]
-	}
-
 ## Package Development Integration
 snippet s3export "S3 method export for NAMESPACE"
 	#' @export
@@ -370,21 +341,6 @@ snippet s3group "S3 group generic methods"
 			stop("Function not defined for ${1:classname} objects")
 		)
 	}
-
-## S4
-snippet sg
-	setGeneric("${1:generic}", function(${2:x, ...}) {
-		standardGeneric("${1:generic}")
-	})
-
-snippet sm
-	setMethod("${1:generic}", ${2:class}, function(${2:x, ...}) {
-		${0}
-	})
-
-snippet sc
-	setClass("${1:Class}", slots = c(${2:name = "type"}))
-
 
 # Conditionals
 
