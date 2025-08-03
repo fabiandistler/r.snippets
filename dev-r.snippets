@@ -154,20 +154,20 @@ snippet lcsup "Mark function as superseded"
 
 # R Error Handling Snippets
 
-snippet trycatch “Basic tryCatch with error handling”
+snippet trycatch "Basic tryCatch with error handling"
 	tryCatch(
 		expr = {
 			${1:# Code that might fail}
 		},
 		error = function(e) {
 			${2:# Handle error}
-			message(“Error: “, e$message)
+			message("Error: ", e$message)
 			${3:return(NULL)}
 		}
 	)
 
 
-snippet trychain “Chain multiple tryCatch attempts”
+snippet trychain "Chain multiple tryCatch attempts"
 	result <- tryCatch(
 		expr = {
 			${1:# Primary method}
@@ -179,7 +179,7 @@ snippet trychain “Chain multiple tryCatch attempts”
 				},
 				error = function(e2) {
 					${3:# Final fallback or error}
-					stop(“All methods failed. Primary: “, e1$message, “. Fallback: “, e2$message)
+					stop("All methods failed. Primary: ", e1$message, ". Fallback: ", e2$message)
 				}
 			)
 		}
