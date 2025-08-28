@@ -415,3 +415,13 @@ snippet context "Export complete package as text file"
 		pkglite::file_default()
 		) |>
 	pkglite::pack()
+
+
+snippet jadorn "Adorn tabyl with percentages and totals"
+	janitor::tabyl(${1:data}, ${2:col1}${3:, ${4:col2}}) |>
+		janitor::adorn_totals("${5:row}") |>
+		janitor::adorn_percentages("${6:row}") |>
+		janitor::adorn_pct_formatting(digits = ${7:1}) |>
+		janitor::adorn_ns()
+
+
