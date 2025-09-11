@@ -17,22 +17,6 @@ snippet pakid "pak::local_install_deps() - Install local package dependencies"
 	pak::local_install_deps()
 
 
-snippet function "Function skeleton with try catch and error print"
-	${1:name} <- function(${2:input}) {
-		tryCatch(
-			expr = {
-				${0}
-				return(${3:output})
-			},
-			error = function(e){
-				print(
-				sprintf("An error occurred in ${1:name} at %s : %s",
-				Sys.time(),
-				e)
-				)
-			})
-	}
-
 snippet compilefunction "Compile function for speed"
 	${1:compiled_fun} <- compiler::cmpfun(${2:fun_name})
 
