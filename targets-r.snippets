@@ -8,13 +8,13 @@ snippet tarinit "Initialize targets project"
 # ─────────────────────────────────────────────────────────────
 # Target Definition
 snippet tar "Basic target"
-	tar_target(
+	targets::tar_target(
 		name = ${1:target_name},
 		command = ${2:expression}
 	)
 
 snippet tarfile "File target"
-	tar_target(
+	targets::tar_target(
 		name = ${1:file_target},
 		command = ${2:"path/to/file.csv"},
 		format = "file"
@@ -33,20 +33,20 @@ snippet tarmap "Map over single target"
 # ─────────────────────────────────────────────────────────────
 # Pipeline Execution
 snippet tarmake "Run pipeline"
-	tar_make()
+	targets::tar_make()
 
 # ─────────────────────────────────────────────────────────────
 # Reading Results
 snippet tarread "Read single target"
-	tar_read(${1:target_name})
+	targets::tar_read(${1:target_name})
 
 snippet tarload "Load targets into environment"
-	tar_load(${1:target_name})
+	targets::tar_load(${1:target_name})
 
 # ─────────────────────────────────────────────────────────────
 # Inspection & Visualization
 snippet tarvis "Visualize pipeline network"
-	tar_visnetwork(
+	targets::tar_visnetwork(
 		names = ${1:NULL},
 		outdated = ${2:TRUE},
 		label = "${3:time}",
@@ -54,38 +54,38 @@ snippet tarvis "Visualize pipeline network"
 	)
 
 snippet tarman "Show manifest"
-	tar_manifest(
+	targets::tar_manifest(
 		names = ${1:NULL},
 		fields = tidyselect::any_of(c("name", "command", "pattern", "description"))
 	)
 
 snippet tarout "Check outdated targets"
-	tar_outdated()
+	targets::tar_outdated()
 
 snippet tarprog "Show progress"
-	tar_progress()
+	targets::tar_progress()
 
 # ─────────────────────────────────────────────────────────────
 # Cleanup & Management
 snippet tardelete "Delete specific targets"
-	tar_delete(names = c(${1:"target1", "target2"}))
+	targets::tar_delete(names = c(${1:"target1", "target2"}))
 
 snippet tardestroy "Remove entire store"
-	tar_destroy()
+	targets::tar_destroy()
 
 snippet tarprune "Remove outdated objects"
-	tar_prune()
+	targets::tar_prune()
 
 snippet targc "Run garbage collection"
-	tar_invalidate(names = c(${1:"target_name"}))
+	targets::tar_invalidate(names = c(${1:"target_name"}))
 
 # ─────────────────────────────────────────────────────────────
 # Debugging & Development
 snippet tarworkspace "Load target workspace for debugging"
-	tar_workspace(${1:target_name})
+	targets::tar_workspace(${1:target_name})
 
 snippet tardebug "Set debug mode for target"
-	tar_option_set(debug = "${1:target_name}")
+	targets::tar_option_set(debug = "${1:target_name}")
 
 # ─────────────────────────────────────────────────────────────
 # tarchetypes Integration
@@ -102,7 +102,7 @@ snippet tarmap2 "Map with custom names (tarchetypes)"
 			${1:param1} = ${2:c("a", "b", "c")},
 			${3:param2} = ${4:c(1, 2, 3)}
 		),
-		tar_target(
+		targets::tar_target(
 			name = ${5:target_name},
 			command = ${6:expression_using_params}
 		)
@@ -125,14 +125,14 @@ snippet tarquarto "Render Quarto document (tarchetypes)"
 # ─────────────────────────────────────────────────────────────
 # Common Patterns
 snippet tardata "Data loading pattern"
-	tar_target(
+	targets::tar_target(
 		name = ${1:raw_data},
 		command = ${2:data.table::fread}(${3:file_path}),
 		format = "${4:qs}"
 	)
 
 snippet tarmodel "Model fitting pattern"
-	tar_target(
+	targets::tar_target(
 		name = ${1:model},
 		command = {
 			${2:lm}(${3:formula}, data = ${4:prepared_data})
@@ -140,7 +140,7 @@ snippet tarmodel "Model fitting pattern"
 	)
 
 snippet tarplot "Plot creation pattern"
-	tar_target(
+	targets::tar_target(
 		name = ${1:plot},
 		command = {
 			ggplot2::ggplot(${2:data}, ggplot2::aes(${3})) +
@@ -149,7 +149,7 @@ snippet tarplot "Plot creation pattern"
 	)
 
 snippet tarsave "Save output pattern"
-	tar_target(
+	targets::tar_target(
 		name = ${1:output_file},
 		command = {
 			${2:ggsave}("${3:output.png}", ${4:plot_object})
