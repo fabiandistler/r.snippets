@@ -57,4 +57,4 @@ snippet dttic "start timer"
   started.at <- proc.time()
 
 snippet dttoc "stop timer"
-  cat("Finished in",data.table::timetaken(started.at),"\n")
+  message("Finished in",data.table::timetaken(started.at),"\n")
