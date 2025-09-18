@@ -408,4 +408,11 @@ snippet jadorn "Adorn tabyl with percentages and totals"
 		janitor::adorn_pct_formatting(digits = ${7:1}) |>
 		janitor::adorn_ns()
 
-
+snippet merge "Left Join with different column names"
+	merge(
+		${1:x},
+		${2:y},
+		by.x = "${3:x_key}",
+		by.y = "${4:y_key}",
+		all.x = TRUE
+	)
