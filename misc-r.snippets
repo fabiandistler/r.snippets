@@ -21,7 +21,7 @@ snippet compilefunction "Compile function for speed"
 	${1:compiled_fun} <- compiler::cmpfun(${2:fun_name})
 
 snippet mm "Cache function"
-	${1:function_to_cache} <- memoise::memoise(${1:function_to_cache})
+	${1:cached_fun} <- memoise::memoise(${2:original_fun})
 
 # Prints output to cursor need to run with tab+shift
 # !rnorm(5)<Shift-Tab>

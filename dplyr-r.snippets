@@ -1,0 +1,211 @@
+# dplyr - Data Manipulation
+# ─────────────────────────────────────────────────────────────
+
+# Core Verbs
+snippet dpmut "Mutate - create/modify columns"
+	dplyr::mutate(${1:col} = ${2:expression})
+
+snippet dpfilt "Filter rows based on condition"
+	dplyr::filter(${1:condition})
+
+snippet dpsel "Select columns"
+	dplyr::select(${1:col1}, ${2:col2})
+
+snippet dparr "Arrange rows by columns"
+	dplyr::arrange(${1:col})
+
+snippet dparrd "Arrange rows descending"
+	dplyr::arrange(desc(${1:col}))
+
+snippet dpsum "Summarise data"
+	dplyr::summarise(${1:new_col} = ${2:mean(old_col, na.rm = TRUE)})
+
+snippet dpgrp "Group by columns"
+	dplyr::group_by(${1:col1}${2:, ${3:col2}})
+
+snippet dpungrp "Ungroup data"
+	dplyr::ungroup()
+
+# Multiple Columns Operations
+snippet dpmutif "Mutate with if_else"
+	dplyr::mutate(${1:new_col} = if_else(${2:condition}, ${3:true_val}, ${4:false_val}))
+
+snippet dpmutcase "Mutate with case_when"
+	dplyr::mutate(${1:new_col} = case_when(
+		${2:condition1} ~ ${3:value1},
+		${4:condition2} ~ ${5:value2},
+		.default = ${6:default_value}
+	))
+
+snippet dpmutacross "Mutate across multiple columns"
+	dplyr::mutate(across(${1:where(is.numeric)}, ${2:~round(.x, 2)}))
+
+snippet dpsumacross "Summarise across multiple columns"
+	dplyr::summarise(across(${1:where(is.numeric)}, ${2:~mean(.x, na.rm = TRUE)}))
+
+# Selection Helpers
+snippet dpselstarts "Select columns starting with"
+	dplyr::select(starts_with("${1:prefix}"))
+
+snippet dpselends "Select columns ending with"
+	dplyr::select(ends_with("${1:suffix}"))
+
+snippet dpselcontains "Select columns containing"
+	dplyr::select(contains("${1:pattern}"))
+
+snippet dpselmatches "Select columns matching regex"
+	dplyr::select(matches("${1:regex}"))
+
+snippet dpselnum "Select numeric columns"
+	dplyr::select(where(is.numeric))
+
+snippet dpselchar "Select character columns"
+	dplyr::select(where(is.character))
+
+# Joins
+snippet dpljoin "Left join"
+	dplyr::left_join(${1:y}, by = ${2:"key"})
+
+snippet dpijoin "Inner join"
+	dplyr::inner_join(${1:y}, by = ${2:"key"})
+
+snippet dprjoin "Right join"
+	dplyr::right_join(${1:y}, by = ${2:"key"})
+
+snippet dpfjoin "Full join"
+	dplyr::full_join(${1:y}, by = ${2:"key"})
+
+snippet dpsemijoin "Semi join - keep x rows matching y"
+	dplyr::semi_join(${1:y}, by = ${2:"key"})
+
+snippet dpantijoin "Anti join - keep x rows not in y"
+	dplyr::anti_join(${1:y}, by = ${2:"key"})
+
+snippet dpjoindiff "Join by different column names"
+	dplyr::left_join(${1:y}, by = c("${2:x_col}" = "${3:y_col}"))
+
+# Row Operations
+snippet dpslice "Slice rows by position"
+	dplyr::slice(${1:1:10})
+
+snippet dpslicehead "Slice first n rows"
+	dplyr::slice_head(n = ${1:10})
+
+snippet dpslicetail "Slice last n rows"
+	dplyr::slice_tail(n = ${1:10})
+
+snippet dpslicemax "Slice rows with max values"
+	dplyr::slice_max(${1:col}, n = ${2:5})
+
+snippet dpslicemin "Slice rows with min values"
+	dplyr::slice_min(${1:col}, n = ${2:5})
+
+snippet dpslicesample "Slice random sample"
+	dplyr::slice_sample(n = ${1:100})
+
+snippet dpdistinct "Get distinct rows"
+	dplyr::distinct(${1:col1}${2:, ${3:col2}})
+
+# Counting
+snippet dpcount "Count by groups"
+	dplyr::count(${1:col}, sort = ${2:TRUE})
+
+snippet dpadd_count "Add count column"
+	dplyr::add_count(${1:col})
+
+snippet dpn "Count rows in current group"
+	dplyr::summarise(n = n())
+
+# Window Functions
+snippet dplag "Lag values"
+	dplyr::mutate(${1:lagged} = lag(${2:col}, n = ${3:1}))
+
+snippet dplead "Lead values"
+	dplyr::mutate(${1:lead_col} = lead(${2:col}, n = ${3:1}))
+
+snippet dpcumsum "Cumulative sum"
+	dplyr::mutate(${1:cumsum_col} = cumsum(${2:col}))
+
+snippet dprank "Rank values"
+	dplyr::mutate(${1:rank_col} = row_number(${2:col}))
+
+snippet dpdenserank "Dense rank values"
+	dplyr::mutate(${1:rank_col} = dense_rank(${2:col}))
+
+snippet dpntile "Create ntiles"
+	dplyr::mutate(${1:quantile} = ntile(${2:col}, n = ${3:4}))
+
+# Advanced Operations
+snippet dprename "Rename columns"
+	dplyr::rename(${1:new_name} = ${2:old_name})
+
+snippet dprelocate "Relocate columns"
+	dplyr::relocate(${1:col}, .before = ${2:other_col})
+
+snippet dppull "Pull column as vector"
+	dplyr::pull(${1:col})
+
+snippet dprowwise "Row-wise operations"
+	dplyr::rowwise() |>
+		dplyr::mutate(${1:row_sum} = sum(c_across(${2:where(is.numeric)})))
+
+snippet dpnested "Nest data by groups"
+	dplyr::group_by(${1:col}) |>
+		tidyr::nest()
+
+# NA Handling
+snippet dpfilterna "Filter out NA values"
+	dplyr::filter(!is.na(${1:col}))
+
+snippet dpmutifna "Replace NA with value"
+	dplyr::mutate(${1:col} = if_else(is.na(${1:col}), ${2:0}, ${1:col}))
+
+snippet dpcoalesce "Coalesce - first non-NA"
+	dplyr::mutate(${1:result} = coalesce(${2:col1}, ${3:col2}, ${4:default}))
+
+# Bind Operations
+snippet dpbindrows "Bind rows"
+	dplyr::bind_rows(${1:df1}, ${2:df2})
+
+snippet dpbindcols "Bind columns"
+	dplyr::bind_cols(${1:df1}, ${2:df2})
+
+# Complete Pipelines
+snippet dppipe "Common dplyr pipeline"
+	${1:data} |>
+		dplyr::filter(${2:condition}) |>
+		dplyr::mutate(${3:new_col} = ${4:expression}) |>
+		dplyr::group_by(${5:group_col}) |>
+		dplyr::summarise(${6:summary_col} = ${7:mean(col, na.rm = TRUE)})
+
+snippet dpgrpsum "Group and summarise pattern"
+	${1:data} |>
+		dplyr::group_by(${2:group_col}) |>
+		dplyr::summarise(
+			n = n(),
+			mean = mean(${3:col}, na.rm = TRUE),
+			sd = sd(${3:col}, na.rm = TRUE)
+		)
+
+snippet dptopn "Get top n per group"
+	${1:data} |>
+		dplyr::group_by(${2:group_col}) |>
+		dplyr::slice_max(${3:value_col}, n = ${4:5})
+
+# Conditional Filters
+snippet dpbetween "Filter between values"
+	dplyr::filter(between(${1:col}, ${2:left}, ${3:right}))
+
+snippet dpnear "Filter near value"
+	dplyr::filter(near(${1:col}, ${2:value}, tol = ${3:0.01}))
+
+# Text Manipulation in dplyr
+snippet dpstrmut "String mutation with stringr"
+	dplyr::mutate(${1:clean_col} = stringr::str_to_lower(${2:col}))
+
+# Scoped Operations (legacy but still useful)
+snippet dpif_all "Summarise if all TRUE"
+	dplyr::summarise(${1:all_positive} = if_all(${2:where(is.numeric)}, ~.x > 0))
+
+snippet dpif_any "Summarise if any TRUE"
+	dplyr::summarise(${1:any_negative} = if_any(${2:where(is.numeric)}, ~.x < 0))

@@ -1,0 +1,275 @@
+# lubridate - Date and Time Manipulation
+# ─────────────────────────────────────────────────────────────
+
+# Parsing Dates
+snippet ldymd "Parse year-month-day"
+	lubridate::ymd("${1:2024-01-15}")
+
+snippet ldmdy "Parse month-day-year"
+	lubridate::mdy("${1:01/15/2024}")
+
+snippet lddmy "Parse day-month-year"
+	lubridate::dmy("${1:15-01-2024}")
+
+snippet ldymdh "Parse year-month-day hour"
+	lubridate::ymd_h("${1:2024-01-15 14}")
+
+snippet ldymdhm "Parse year-month-day hour-minute"
+	lubridate::ymd_hm("${1:2024-01-15 14:30}")
+
+snippet ldymdhms "Parse year-month-day hour-minute-second"
+	lubridate::ymd_hms("${1:2024-01-15 14:30:45}")
+
+# Current Date/Time
+snippet ldnow "Current date-time"
+	lubridate::now()
+
+snippet ldtoday "Today's date"
+	lubridate::today()
+
+# Extracting Components
+snippet ldyear "Extract year"
+	lubridate::year(${1:date})
+
+snippet ldmonth "Extract month"
+	lubridate::month(${1:date})
+
+snippet ldday "Extract day"
+	lubridate::day(${1:date})
+
+snippet ldwday "Extract weekday"
+	lubridate::wday(${1:date}, label = ${2:TRUE})
+
+snippet ldmday "Extract day of month"
+	lubridate::mday(${1:date})
+
+snippet ldyday "Extract day of year"
+	lubridate::yday(${1:date})
+
+snippet ldhour "Extract hour"
+	lubridate::hour(${1:datetime})
+
+snippet ldminute "Extract minute"
+	lubridate::minute(${1:datetime})
+
+snippet ldsecond "Extract second"
+	lubridate::second(${1:datetime})
+
+snippet ldquarter "Extract quarter"
+	lubridate::quarter(${1:date})
+
+snippet ldweek "Extract week"
+	lubridate::week(${1:date})
+
+snippet ldisoweek "Extract ISO week"
+	lubridate::isoweek(${1:date})
+
+# Setting Components
+snippet ldyearset "Set year"
+	lubridate::year(${1:date}) <- ${2:2024}
+
+snippet ldmonthset "Set month"
+	lubridate::month(${1:date}) <- ${2:6}
+
+snippet lddayset "Set day"
+	lubridate::day(${1:date}) <- ${2:15}
+
+snippet ldhourset "Set hour"
+	lubridate::hour(${1:datetime}) <- ${2:14}
+
+# Rounding Dates
+snippet ldfloor "Floor date"
+	lubridate::floor_date(${1:date}, unit = "${2:month}")
+
+snippet ldceil "Ceiling date"
+	lubridate::ceiling_date(${1:date}, unit = "${2:month}")
+
+snippet ldround "Round date"
+	lubridate::round_date(${1:date}, unit = "${2:month}")
+
+snippet ldrollback "Roll back to last day of previous month"
+	lubridate::rollback(${1:date})
+
+snippet ldrollforward "Roll forward to last day of month"
+	lubridate::rollforward(${1:date})
+
+# Date Arithmetic - Durations
+snippet ldduration "Create duration"
+	lubridate::duration(${1:1}, units = "${2:days}")
+
+snippet lddhours "Duration in hours"
+	lubridate::dhours(${1:24})
+
+snippet ldddays "Duration in days"
+	lubridate::ddays(${1:7})
+
+snippet lddweeks "Duration in weeks"
+	lubridate::dweeks(${1:2})
+
+snippet lddmonths "Duration in months (approximate)"
+	lubridate::dmonths(${1:3})
+
+snippet lddyears "Duration in years (approximate)"
+	lubridate::dyears(${1:1})
+
+snippet lddseconds "Duration in seconds"
+	lubridate::dseconds(${1:60})
+
+snippet lddminutes "Duration in minutes"
+	lubridate::dminutes(${1:30})
+
+# Date Arithmetic - Periods
+snippet ldperiod "Create period"
+	lubridate::period(${1:1}, units = "${2:months}")
+
+snippet ldhours "Period in hours"
+	lubridate::hours(${1:24})
+
+snippet lddays "Period in days"
+	lubridate::days(${1:7})
+
+snippet ldweeks "Period in weeks"
+	lubridate::weeks(${1:2})
+
+snippet ldmonths "Period in months"
+	lubridate::months(${1:3})
+
+snippet ldyears "Period in years"
+	lubridate::years(${1:1})
+
+snippet ldseconds "Period in seconds"
+	lubridate::seconds(${1:60})
+
+snippet ldminutes "Period in minutes"
+	lubridate::minutes(${1:30})
+
+# Intervals
+snippet ldinterval "Create interval"
+	lubridate::interval(${1:start_date}, ${2:end_date})
+
+snippet ldintdiv "Divide interval by duration"
+	${1:interval} %/% lubridate::${2:days}(${3:1})
+
+snippet ldintin "Check if date is in interval"
+	${1:date} %within% ${2:interval}
+
+# Time Spans
+snippet ldtimediff "Time difference"
+	lubridate::as.duration(${1:end_date} - ${2:start_date})
+
+snippet ldtimelen "Length of time interval"
+	lubridate::time_length(${1:interval}, unit = "${2:days}")
+
+# Timezone Operations
+snippet ldwithtz "Change timezone (keep clock time)"
+	lubridate::force_tz(${1:datetime}, tzone = "${2:America/New_York}")
+
+snippet ldtz "Change timezone (keep instant)"
+	lubridate::with_tz(${1:datetime}, tzone = "${2:America/New_York}")
+
+snippet ldtzlist "List all timezones"
+	OlsonNames()
+
+# Date Sequences
+snippet ldseq "Sequence of dates"
+	seq(${1:from_date}, ${2:to_date}, by = "${3:1 day}")
+
+snippet ldseqperiod "Sequence by period"
+	${1:start} + lubridate::days(0:${2:30})
+
+# Logical Tests
+snippet ldleap "Is leap year"
+	lubridate::leap_year(${1:date})
+
+snippet ldisdate "Is date object"
+	lubridate::is.Date(${1:x})
+
+snippet ldisposix "Is POSIXct/POSIXlt"
+	lubridate::is.POSIXt(${1:x})
+
+snippet ldisduration "Is duration"
+	lubridate::is.duration(${1:x})
+
+snippet ldisperiod "Is period"
+	lubridate::is.period(${1:x})
+
+snippet ldisinterval "Is interval"
+	lubridate::is.interval(${1:x})
+
+# Formatting
+snippet ldstamp "Create date formatter"
+	${1:date_format} <- lubridate::stamp("${2:January 1, 1999}")
+	${1:date_format}(${3:date})
+
+snippet ldstamptime "Create datetime formatter"
+	${1:datetime_format} <- lubridate::stamp("${2:January 1, 1999 3:34 pm}")
+	${1:datetime_format}(${3:datetime})
+
+# Common Date Operations
+snippet ldeom "End of month"
+	lubridate::ceiling_date(${1:date}, "month") - lubridate::days(1)
+
+snippet ldsom "Start of month"
+	lubridate::floor_date(${1:date}, "month")
+
+snippet ldeoy "End of year"
+	lubridate::ceiling_date(${1:date}, "year") - lubridate::days(1)
+
+snippet ldsoy "Start of year"
+	lubridate::floor_date(${1:date}, "year")
+
+snippet ldeow "End of week"
+	lubridate::ceiling_date(${1:date}, "week") - lubridate::days(1)
+
+snippet ldsow "Start of week"
+	lubridate::floor_date(${1:date}, "week")
+
+# Age Calculations
+snippet ldage "Calculate age in years"
+	lubridate::time_length(lubridate::interval(${1:birth_date}, lubridate::today()), "years")
+
+snippet lddaysbetween "Days between dates"
+	lubridate::time_length(lubridate::interval(${1:start}, ${2:end}), "days")
+
+snippet ldweeksbetween "Weeks between dates"
+	lubridate::time_length(lubridate::interval(${1:start}, ${2:end}), "weeks")
+
+snippet ldmonthsbetween "Months between dates"
+	lubridate::time_length(lubridate::interval(${1:start}, ${2:end}), "months")
+
+# Common Patterns with dplyr
+snippet ldmutdate "Mutate to parse date column"
+	dplyr::mutate(${1:date_col} = lubridate::ymd(${1:date_col}))
+
+snippet ldmutfloor "Mutate to floor date"
+	dplyr::mutate(${1:month} = lubridate::floor_date(${2:date}, "${3:month}"))
+
+snippet ldfilterrange "Filter date range"
+	dplyr::filter(${1:date_col} >= lubridate::ymd("${2:2024-01-01}") &
+	              ${1:date_col} <= lubridate::ymd("${3:2024-12-31}"))
+
+snippet ldfilterlast "Filter last n days"
+	dplyr::filter(${1:date_col} >= lubridate::today() - lubridate::days(${2:30}))
+
+snippet ldgrpmonth "Group by month"
+	dplyr::mutate(month = lubridate::floor_date(${1:date}, "month")) |>
+		dplyr::group_by(month)
+
+# Date Validation
+snippet ldvalid "Make invalid date NA"
+	lubridate::ymd(${1:date_string}, quiet = TRUE)
+
+# Business Days
+snippet ldaddbus "Add business days (with bizdays package)"
+	bizdays::add.bizdays(${1:date}, ${2:n_days})
+
+# Working with Different Date Formats
+snippet ldparse "Parse date with multiple formats"
+	lubridate::parse_date_time(${1:date_string}, orders = c("${2:ymd}", "${3:mdy}", "${4:dmy}"))
+
+# Decimal Date/Time
+snippet lddecimal "Convert to decimal date"
+	lubridate::decimal_date(${1:date})
+
+snippet lddatefromdec "Date from decimal"
+	lubridate::date_decimal(${1:2024.5})

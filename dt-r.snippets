@@ -57,4 +57,47 @@ snippet dttic "start timer"
   started.at <- proc.time()
 
 snippet dttoc "stop timer"
-  message("Finished in",data.table::timetaken(started.at),"\n")
+  message("Finished in ", data.table::timetaken(started.at), "\n")
+
+snippet dtmelt "reshape wide to long (melt)"
+	data.table::melt(
+		${1:DT},
+		id.vars = c("${2:id}"),
+		measure.vars = c(${3:"col1", "col2"}),
+		variable.name = "${4:variable}",
+		value.name = "${5:value}"
+	)
+
+snippet dtcast "reshape long to wide (dcast)"
+	data.table::dcast(
+		${1:DT},
+		${2:id} ~ ${3:variable},
+		value.var = "${4:value}"
+	)
+
+snippet dtshift "lag/lead values (shift)"
+	${1:DT}[, ${2:lagged} := data.table::shift(${3:col}, n = ${4:1}, type = "${5:lag}")]
+
+snippet dtshiftlead "lead values"
+	${1:DT}[, ${2:lead_col} := data.table::shift(${3:col}, n = ${4:1}, type = "lead")]
+
+snippet dtrbind "fast row binding"
+	data.table::rbindlist(list(${1:DT1}, ${2:DT2}), fill = ${3:TRUE})
+
+snippet dtrbindfill "rbind with column fill"
+	data.table::rbindlist(list(${1:DT1}, ${2:DT2}), fill = TRUE, use.names = TRUE)
+
+snippet dtfill "fill NA forward/backward"
+	${1:DT}[, ${2:col} := data.table::nafill(${2:col}, type = "${3:locf}")]
+
+snippet dtfcoalesce "coalesce - first non-NA"
+	${1:DT}[, ${2:result} := data.table::fcoalesce(${3:col1}, ${4:col2})]
+
+snippet dtfrank "fast ranking"
+	${1:DT}[, ${2:rank} := data.table::frank(${3:col}, ties.method = "${4:min}")]
+
+snippet dtrleid "run-length encoding id"
+	${1:DT}[, ${2:group} := data.table::rleid(${3:col})]
+
+snippet dtupdate "update join"
+	${1:DT1}[${2:DT2}, ${3:col} := i.${3:col}, on = .(${4:key}))]

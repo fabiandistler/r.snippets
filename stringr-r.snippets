@@ -30,8 +30,144 @@ snippet strsort "Sort strings"
 	stringr::str_sort(${1:string}, decreasing = ${2:FALSE}, locale = "${3:en}")
 
 # ─────────────────────────────────────────────────────────────
+# Extraction
+snippet strext "Extract first pattern match"
+	stringr::str_extract(${1:string}, "${2:pattern}")
+
+snippet strexta "Extract all pattern matches"
+	stringr::str_extract_all(${1:string}, "${2:pattern}")
+
+snippet strmatch "Match pattern and capture groups"
+	stringr::str_match(${1:string}, "${2:pattern}")
+
+snippet strmatcha "Match all patterns and capture groups"
+	stringr::str_match_all(${1:string}, "${2:pattern}")
+
+# ─────────────────────────────────────────────────────────────
+# Detection
+snippet strdet "Detect pattern presence"
+	stringr::str_detect(${1:string}, "${2:pattern}")
+
+snippet strstarts "Detect pattern at start"
+	stringr::str_starts(${1:string}, "${2:pattern}")
+
+snippet strends "Detect pattern at end"
+	stringr::str_ends(${1:string}, "${2:pattern}")
+
+snippet strcount "Count pattern occurrences"
+	stringr::str_count(${1:string}, "${2:pattern}")
+
+snippet strwhich "Which strings contain pattern"
+	stringr::str_which(${1:string}, "${2:pattern}")
+
+snippet strlocate "Locate pattern position"
+	stringr::str_locate(${1:string}, "${2:pattern}")
+
+snippet strlocatea "Locate all pattern positions"
+	stringr::str_locate_all(${1:string}, "${2:pattern}")
+
+# ─────────────────────────────────────────────────────────────
+# Transformation
+snippet strtolower "Convert to lowercase"
+	stringr::str_to_lower(${1:string})
+
+snippet strtoupper "Convert to uppercase"
+	stringr::str_to_upper(${1:string})
+
+snippet strtotitle "Convert to title case"
+	stringr::str_to_title(${1:string})
+
+snippet strtosentence "Convert to sentence case"
+	stringr::str_to_sentence(${1:string})
+
+snippet strtrim "Trim whitespace"
+	stringr::str_trim(${1:string}, side = "${2:both}")
+
+snippet strsquish "Trim and collapse whitespace"
+	stringr::str_squish(${1:string})
+
+snippet strpad "Pad string to width"
+	stringr::str_pad(${1:string}, width = ${2:10}, side = "${3:left}", pad = "${4: }")
+
+snippet strtrunc "Truncate string to width"
+	stringr::str_trunc(${1:string}, width = ${2:20}, side = "${3:right}", ellipsis = "${4:...}")
+
+snippet strwrap "Wrap string to width"
+	stringr::str_wrap(${1:string}, width = ${2:80})
+
+# ─────────────────────────────────────────────────────────────
+# Modification
+snippet strreplace "Replace first pattern match"
+	stringr::str_replace(${1:string}, "${2:pattern}", "${3:replacement}")
+
+snippet strremove "Remove first pattern match"
+	stringr::str_remove(${1:string}, "${2:pattern}")
+
+snippet strrep "Repeat string"
+	stringr::str_dup(${1:string}, ${2:times})
+
+# ─────────────────────────────────────────────────────────────
+# Length and Position
+snippet strlen "String length"
+	stringr::str_length(${1:string})
+
+snippet strsub "Substring by position"
+	stringr::str_sub(${1:string}, start = ${2:1}, end = ${3:5})
+
+snippet strsubset "Subset by start/end"
+	stringr::str_sub(${1:string}, ${2:1}, ${3:-1})
+
+# ─────────────────────────────────────────────────────────────
+# Splitting and Joining
+snippet strsplit "Split string by pattern"
+	stringr::str_split(${1:string}, "${2:pattern}")
+
+snippet strsplitfix "Split string into fixed number"
+	stringr::str_split_fixed(${1:string}, "${2:pattern}", n = ${3:3})
+
+snippet strsplit1 "Split and get first element"
+	stringr::str_split_1(${1:string}, "${2:pattern}")
+
+snippet strglue "Glue strings with interpolation"
+	stringr::str_glue("${1:Text with {variable}}")
+
+snippet strgluedata "Glue with data"
+	stringr::str_glue_data(${1:data}, "${2:Text with {column}}")
+
+# ─────────────────────────────────────────────────────────────
+# Sorting and Ordering
+snippet strorder "Order strings"
+	stringr::str_order(${1:string}, decreasing = ${2:FALSE})
+
+# ─────────────────────────────────────────────────────────────
 # Data Science Workflows (data.table compatible)
 snippet strclean "Clean text data pipeline"
 	${1:DT}[, ${2:clean_col} := stringr::str_to_lower(${3:text_col})] |>
 		.[, ${2:clean_col} := stringr::str_trim(${2:clean_col})] |>
 		.[, ${2:clean_col} := stringr::str_squish(${2:clean_col})]
+
+# ─────────────────────────────────────────────────────────────
+# Common Patterns
+snippet strextnum "Extract numbers from string"
+	stringr::str_extract(${1:string}, "\\d+")
+
+snippet strextemail "Extract email addresses"
+	stringr::str_extract(${1:string}, "[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}")
+
+snippet strexturl "Extract URLs"
+	stringr::str_extract(${1:string}, "https?://[^\\s]+")
+
+snippet strphone "Extract phone numbers"
+	stringr::str_extract(${1:string}, "\\(?\\d{3}\\)?[-.\\s]?\\d{3}[-.\\s]?\\d{4}")
+
+snippet strremhtml "Remove HTML tags"
+	stringr::str_remove_all(${1:string}, "<[^>]+>")
+
+snippet strremspace "Remove extra spaces"
+	stringr::str_replace_all(${1:string}, "\\s+", " ")
+
+snippet strnorm "Normalize string (lowercase, trim)"
+	${1:string} |>
+		stringr::str_to_lower() |>
+		stringr::str_trim() |>
+		stringr::str_squish()

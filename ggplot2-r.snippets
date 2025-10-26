@@ -1,0 +1,348 @@
+# ggplot2 - Data Visualization
+# ─────────────────────────────────────────────────────────────
+
+# Basic Plot Structure
+snippet ggbase "Basic ggplot structure"
+	ggplot(${1:data}, aes(x = ${2:x}, y = ${3:y})) +
+		${4:geom_point()}
+
+snippet ggaes "Add aesthetics"
+	aes(${1:x = x, y = y}${2:, color = group})
+
+# Geoms - Basic
+snippet ggpoint "Point geom"
+	geom_point(${1:size = 2, alpha = 0.7})
+
+snippet ggline "Line geom"
+	geom_line(${1:linewidth = 1})
+
+snippet ggcol "Column/bar geom"
+	geom_col(${1:fill = "steelblue"})
+
+snippet ggbar "Bar geom with stat count"
+	geom_bar(${1:fill = "steelblue"})
+
+snippet gghist "Histogram"
+	geom_histogram(bins = ${1:30}, fill = "${2:steelblue}", color = "${3:white}")
+
+snippet ggdens "Density plot"
+	geom_density(fill = "${1:steelblue}", alpha = ${2:0.5})
+
+snippet ggbox "Boxplot"
+	geom_boxplot(${1:fill = "steelblue"})
+
+snippet ggviolin "Violin plot"
+	geom_violin(${1:fill = "steelblue"})
+
+# Geoms - Statistical
+snippet ggsmooth "Smoothed conditional means"
+	geom_smooth(method = "${1:lm}", se = ${2:TRUE}, color = "${3:blue}")
+
+snippet ggjitter "Jittered points"
+	geom_jitter(width = ${1:0.2}, height = ${2:0.2}, alpha = ${3:0.6})
+
+snippet ggcount "Count overlapping points"
+	geom_count(alpha = ${1:0.7})
+
+snippet ggcontour "Contour plot"
+	geom_contour(aes(z = ${1:z}))
+
+snippet gghex "Hexagonal heatmap"
+	geom_hex(bins = ${1:30})
+
+snippet ggbin2d "2D bin heatmap"
+	geom_bin2d(bins = ${1:30})
+
+# Geoms - Text and Labels
+snippet ggtext "Text labels"
+	geom_text(aes(label = ${1:label}), ${2:size = 3})
+
+snippet gglabel "Better positioned text labels"
+	geom_label(aes(label = ${1:label}), ${2:size = 3})
+
+snippet ggrepel "Non-overlapping text with ggrepel"
+	ggrepel::geom_text_repel(aes(label = ${1:label}), ${2:size = 3})
+
+snippet gglabelrepel "Non-overlapping labels with ggrepel"
+	ggrepel::geom_label_repel(aes(label = ${1:label}), ${2:size = 3})
+
+# Geoms - Specialized
+snippet ggtile "Tile/heatmap"
+	geom_tile(aes(fill = ${1:value}))
+
+snippet ggseg "Line segments"
+	geom_segment(aes(xend = ${1:xend}, yend = ${2:yend}), arrow = arrow())
+
+snippet ggarea "Area plot"
+	geom_area(fill = "${1:steelblue}", alpha = ${2:0.5})
+
+snippet ggribbon "Ribbon for confidence intervals"
+	geom_ribbon(aes(ymin = ${1:lower}, ymax = ${2:upper}), fill = "${3:grey70}", alpha = ${4:0.5})
+
+snippet ggpoly "Polygon"
+	geom_polygon(aes(group = ${1:group}), fill = "${2:steelblue}")
+
+snippet ggrect "Rectangle"
+	geom_rect(aes(xmin = ${1:xmin}, xmax = ${2:xmax}, ymin = ${3:ymin}, ymax = ${4:ymax}))
+
+snippet gghline "Horizontal line"
+	geom_hline(yintercept = ${1:0}, linetype = "${2:dashed}", color = "${3:red}")
+
+snippet ggvline "Vertical line"
+	geom_vline(xintercept = ${1:0}, linetype = "${2:dashed}", color = "${3:red}")
+
+snippet ggabline "Diagonal line"
+	geom_abline(intercept = ${1:0}, slope = ${2:1}, linetype = "${3:dashed}")
+
+# Scales - Continuous
+snippet ggscx "Scale x continuous"
+	scale_x_continuous(
+		name = "${1:X Label}",
+		breaks = ${2:seq(0, 100, 20)},
+		labels = ${3:scales::comma}
+	)
+
+snippet ggscy "Scale y continuous"
+	scale_y_continuous(
+		name = "${1:Y Label}",
+		breaks = ${2:seq(0, 100, 20)},
+		labels = ${3:scales::comma}
+	)
+
+snippet ggsclog10 "Log10 scale"
+	scale_${1:y}_log10()
+
+snippet ggscsqrt "Square root scale"
+	scale_${1:y}_sqrt()
+
+snippet ggscrev "Reverse scale"
+	scale_${1:y}_reverse()
+
+# Scales - Discrete
+snippet ggscxd "Scale x discrete"
+	scale_x_discrete(name = "${1:X Label}", labels = ${2:custom_labels})
+
+snippet ggscyd "Scale y discrete"
+	scale_y_discrete(name = "${1:Y Label}", labels = ${2:custom_labels})
+
+# Scales - Color/Fill
+snippet ggcolman "Manual color scale"
+	scale_color_manual(values = c(${1:"red", "blue", "green"}))
+
+snippet ggfillman "Manual fill scale"
+	scale_fill_manual(values = c(${1:"red", "blue", "green"}))
+
+snippet ggcolbrewer "ColorBrewer color scale"
+	scale_color_brewer(palette = "${1:Set1}")
+
+snippet ggfillbrewer "ColorBrewer fill scale"
+	scale_fill_brewer(palette = "${1:Set1}")
+
+snippet ggcolvir "Viridis color scale"
+	scale_color_viridis_${1:c}(option = "${2:D}")
+
+snippet ggfillvir "Viridis fill scale"
+	scale_fill_viridis_${1:c}(option = "${2:D}")
+
+snippet ggcolgradient "Color gradient"
+	scale_color_gradient(low = "${1:blue}", high = "${2:red}")
+
+snippet ggfillgradient "Fill gradient"
+	scale_fill_gradient(low = "${1:blue}", high = "${2:red}")
+
+snippet ggcolgradient2 "Diverging color gradient"
+	scale_color_gradient2(low = "${1:blue}", mid = "${2:white}", high = "${3:red}", midpoint = ${4:0})
+
+# Themes
+snippet ggtheme "Apply theme"
+	theme_${1:minimal}()
+
+snippet ggthemebw "Black and white theme"
+	theme_bw()
+
+snippet ggthememin "Minimal theme"
+	theme_minimal()
+
+snippet ggthemecls "Classic theme"
+	theme_classic()
+
+snippet ggthemelight "Light theme"
+	theme_light()
+
+snippet ggthemedark "Dark theme"
+	theme_dark()
+
+snippet ggthemevoid "Void theme (empty)"
+	theme_void()
+
+# Theme Customization
+snippet ggthememod "Modify theme elements"
+	theme(
+		plot.title = element_text(${1:size = 14, face = "bold"}),
+		axis.text = element_text(${2:size = 10}),
+		legend.position = "${3:right}"
+	)
+
+snippet ggtitle "Add title and labels"
+	labs(
+		title = "${1:Plot Title}",
+		subtitle = "${2:Subtitle}",
+		x = "${3:X Label}",
+		y = "${4:Y Label}",
+		caption = "${5:Source: ...}"
+	)
+
+snippet ggnotitle "Remove axis titles"
+	labs(x = NULL, y = NULL)
+
+snippet ggnolegend "Remove legend"
+	theme(legend.position = "none")
+
+snippet gglegbot "Legend at bottom"
+	theme(legend.position = "bottom")
+
+snippet gglegtop "Legend at top"
+	theme(legend.position = "top")
+
+# Faceting
+snippet ggfacetwrap "Facet wrap by variable"
+	facet_wrap(~${1:var}, ncol = ${2:2})
+
+snippet ggfacetgrid "Facet grid"
+	facet_grid(${1:rows} ~ ${2:cols})
+
+snippet ggfacetscale "Facet with free scales"
+	facet_wrap(~${1:var}, scales = "${2:free_y}")
+
+# Coordinates
+snippet ggcoordflip "Flip coordinates"
+	coord_flip()
+
+snippet ggcoordfix "Fixed aspect ratio"
+	coord_fixed(ratio = ${1:1})
+
+snippet ggcoordpolar "Polar coordinates"
+	coord_polar(theta = "${1:y}")
+
+snippet ggcoordlim "Coordinate limits"
+	coord_cartesian(xlim = c(${1:0, 100}), ylim = c(${2:0, 100}))
+
+# Limits and Zooming
+snippet ggxlim "Set x limits"
+	xlim(${1:0}, ${2:100})
+
+snippet ggylim "Set y limits"
+	ylim(${1:0}, ${2:100})
+
+snippet gglims "Set x and y limits"
+	lims(x = c(${1:0, 100}), y = c(${2:0, 100}))
+
+# Guides
+snippet ggguidenone "Remove specific guide"
+	guides(${1:color} = "none")
+
+snippet ggguidelegend "Customize legend"
+	guides(${1:color} = guide_legend(
+		title = "${2:Legend Title}",
+		nrow = ${3:1}
+	))
+
+snippet ggguidecolorbar "Customize colorbar"
+	guides(${1:fill} = guide_colorbar(
+		title = "${2:Value}",
+		barwidth = ${3:10},
+		barheight = ${4:1}
+	))
+
+# Annotations
+snippet ggannotate "Add text annotation"
+	annotate("text", x = ${1:5}, y = ${2:10}, label = "${3:Text}", ${4:size = 4})
+
+snippet ggannotrect "Add rectangle annotation"
+	annotate("rect", xmin = ${1:0}, xmax = ${2:5}, ymin = ${3:0}, ymax = ${4:10}, alpha = ${5:0.2})
+
+snippet ggannotseg "Add segment annotation"
+	annotate("segment", x = ${1:0}, xend = ${2:5}, y = ${3:0}, yend = ${4:10})
+
+# Complete Plot Templates
+snippet ggscatter "Complete scatterplot"
+	ggplot(${1:data}, aes(x = ${2:x}, y = ${3:y}, color = ${4:group})) +
+		geom_point(size = ${5:2}, alpha = ${6:0.7}) +
+		geom_smooth(method = "${7:lm}", se = TRUE) +
+		scale_color_viridis_d() +
+		labs(
+			title = "${8:Title}",
+			x = "${9:X Label}",
+			y = "${10:Y Label}"
+		) +
+		theme_minimal()
+
+snippet ggbar "Complete bar chart"
+	ggplot(${1:data}, aes(x = ${2:x}, y = ${3:y}, fill = ${4:group})) +
+		geom_col(position = "${5:dodge}") +
+		scale_fill_brewer(palette = "${6:Set1}") +
+		labs(
+			title = "${7:Title}",
+			x = "${8:X Label}",
+			y = "${9:Y Label}"
+		) +
+		theme_minimal() +
+		theme(legend.position = "${10:bottom}")
+
+snippet ggheatmap "Complete heatmap"
+	ggplot(${1:data}, aes(x = ${2:x}, y = ${3:y}, fill = ${4:value})) +
+		geom_tile(color = "white") +
+		scale_fill_gradient2(
+			low = "${5:blue}",
+			mid = "${6:white}",
+			high = "${7:red}",
+			midpoint = ${8:0}
+		) +
+		labs(
+			title = "${9:Heatmap}",
+			x = "${10:X Label}",
+			y = "${11:Y Label}",
+			fill = "${12:Value}"
+		) +
+		theme_minimal() +
+		theme(axis.text.x = element_text(angle = 45, hjust = 1))
+
+snippet ggtime "Time series plot"
+	ggplot(${1:data}, aes(x = ${2:date}, y = ${3:value}, color = ${4:group})) +
+		geom_line(linewidth = ${5:1}) +
+		scale_x_date(date_breaks = "${6:1 month}", date_labels = "${7:%b %Y}") +
+		scale_y_continuous(labels = scales::comma) +
+		labs(
+			title = "${8:Time Series}",
+			x = "${9:Date}",
+			y = "${10:Value}"
+		) +
+		theme_minimal() +
+		theme(axis.text.x = element_text(angle = 45, hjust = 1))
+
+# Saving Plots
+snippet ggsave "Save plot"
+	ggsave(
+		filename = "${1:plot.png}",
+		plot = ${2:last_plot()},
+		width = ${3:10},
+		height = ${4:6},
+		dpi = ${5:300}
+	)
+
+# Advanced Patterns
+snippet ggpatch "Combine plots with patchwork"
+	library(patchwork)
+	${1:p1} + ${2:p2} + plot_layout(ncol = ${3:2})
+
+snippet ggcowplot "Combine plots with cowplot"
+	cowplot::plot_grid(${1:p1}, ${2:p2}, ncol = ${3:2}, labels = c("${4:A}", "${5:B}"))
+
+# Extensions
+snippet ggani "Animate with gganimate"
+	${1:plot} +
+		gganimate::transition_${2:time}(${3:date}) +
+		gganimate::ease_aes('${4:linear}')
+
+snippet gginter "Interactive with plotly"
+	plotly::ggplotly(${1:plot})

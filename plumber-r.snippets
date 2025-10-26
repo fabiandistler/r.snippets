@@ -272,12 +272,7 @@ snippet prfull "Full API with error handling"
 		}) |>
 		
 		# Documentation
-		pr_set_docs(docs = "swagger", title = "${6:My API}") |>
-	
-		# Health check
-		pr_get(path = "/health", handler = function() {
-			list(status = "healthy", timestamp = Sys.time())
-		})
+		pr_set_docs(docs = "swagger", title = "${6:My API}")
 
 # ─────────────────────────────────────────────────────────────
 # Common Patterns

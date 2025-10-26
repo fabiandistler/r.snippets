@@ -218,7 +218,7 @@ snippet hurl "Parse and modify URL"
 
 ## curl Translation
 snippet hcurl "Translate curl command to httr2"
-	httr2::curl_translate('${1:curl -X POST https://api.example.com -H "Content-Type: application/json" -d "{"key":"value"}"}')
+	httr2::curl_translate("${1:curl -X POST https://api.example.com}")
 
 ## Streaming Responses
 snippet hstream "Stream response data"

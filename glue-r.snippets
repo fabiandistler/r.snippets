@@ -1,0 +1,197 @@
+# glue - String Interpolation and Formatting
+# ─────────────────────────────────────────────────────────────
+
+# Basic Glue
+snippet glue "Basic string interpolation"
+	glue::glue("${1:Text with {variable} interpolation}")
+
+snippet gdata "Glue with data frame"
+	glue::glue_data(${1:data}, "${2:Name: {name}, Age: {age}}")
+
+# Multi-line Glue
+snippet gluemulti "Multi-line glue"
+	glue::glue("
+		${1:Line 1 with {var1}}
+		${2:Line 2 with {var2}}
+		${3:Line 3 with {var3}}
+	")
+
+snippet gsql "SQL query with glue"
+	glue::glue_sql("
+		SELECT ${1:*}
+		FROM ${2:table}
+		WHERE ${3:column} = {${4:value}}
+	", .con = ${5:con})
+
+# Collapse
+snippet gcollapse "Glue and collapse vector"
+	glue::glue_collapse(${1:vector}, sep = "${2:, }", last = "${3: and }")
+
+# Safe Glue (no interpolation)
+snippet gsafe "Safe glue without interpolation"
+	glue::glue("${1:Text with {{braces}} literal}")
+
+# Custom Delimiters
+snippet gcustom "Glue with custom delimiters"
+	glue::glue("${1:Text with <<var>>}", .open = "<<", .close = ">>")
+
+# Trimming
+snippet gtrim "Glue with trimmed whitespace"
+	glue::glue("
+		${1:Text}
+	", .trim = TRUE)
+
+# Conditional Glue
+snippet gluecond "Conditional glue"
+	glue::glue("${1:Status: }{if (${2:condition}) '${3:yes}' else '${4:no}'}")
+
+# With Data Frame Rows
+snippet gdatarow "Glue for each row"
+	${1:data} |>
+		glue::glue_data("${2:{name}: {value}}")
+
+# Formatting Numbers
+snippet gnum "Format number with glue"
+	glue::glue("${1:Value: {format(number, big.mark = ',', scientific = FALSE)}}")
+
+snippet gpct "Format percentage"
+	glue::glue("${1:Percentage: {scales::percent(value, accuracy = 0.1)}}")
+
+# File Paths
+snippet gpath "Build file path"
+	glue::glue("${1:path/to/{folder}/{filename}.csv}")
+
+# Messages and Logging
+snippet gmsg "Glue message"
+	message(glue::glue("${1:Processing {item} ({i}/{n})}"))
+
+snippet gwarn "Glue warning"
+	warning(glue::glue("${1:Warning: {problem} detected}"))
+
+snippet gstop "Glue error"
+	stop(glue::glue("${1:Error: {error_type} occurred}"))
+
+# URLs
+snippet gurl "Build URL with glue"
+	glue::glue("${1:https://api.example.com/v1/{endpoint}?id={id}&key={api_key}}")
+
+# Common Patterns
+snippet glist "Format list items"
+	${1:items} <- c("${2:apple}", "${3:banana}", "${4:orange}")
+	glue::glue("Items: {glue::glue_collapse(${1:items}, sep = ', ', last = ' and ')}")
+
+snippet gtable "Create formatted table row"
+	glue::glue_data(${1:data}, "${2:{name:<20} {value:>10} {pct:>6.1f}%}")
+
+snippet greport "Generate report line"
+	glue::glue("
+		## ${1:Section Title}
+
+		${2:Description}: {${3:value}}
+
+		${4:Metric}: {${5:metric}}
+	")
+
+# SQL Patterns
+snippet gsqlselect "SQL SELECT with glue"
+	glue::glue_sql("
+		SELECT {`cols`*}
+		FROM {`table`}
+		WHERE {`id_col`} IN ({ids*})
+	", .con = ${1:con}, cols = ${2:columns}, table = ${3:table_name}, id_col = ${4:id}, ids = ${5:id_values})
+
+snippet gsqlinsert "SQL INSERT with glue"
+	glue::glue_sql("
+		INSERT INTO {`table`} ({`cols`*})
+		VALUES ({vals*})
+	", .con = ${1:con}, table = ${2:table_name}, cols = ${3:columns}, vals = ${4:values})
+
+snippet gsqlupdate "SQL UPDATE with glue"
+	glue::glue_sql("
+		UPDATE {`table`}
+		SET {`col`} = {value}
+		WHERE {`id_col`} = {id}
+	", .con = ${1:con}, table = ${2:table_name}, col = ${3:column}, value = ${4:new_value}, id_col = ${5:id}, id = ${6:id_value})
+
+# With dplyr
+snippet gmutglue "Mutate with glue"
+	dplyr::mutate(${1:label} = glue::glue("${2:{col1} - {col2}}"))
+
+snippet gsumglue "Summarise with glue label"
+	dplyr::summarise(
+		${1:summary} = ${2:mean(value)},
+		${3:label} = glue::glue("${4:Mean: {round(${1:summary}, 2)}}")
+	)
+
+# Function Documentation
+snippet gdoc "Function description with glue"
+	glue::glue("
+		Function: ${1:function_name}
+		Purpose: ${2:description}
+		Author: ${3:name}
+		Date: {Sys.Date()}
+	")
+
+# Progress Messages
+snippet gprog "Progress message"
+	message(glue::glue("${1:Processing item {i} of {n} ({scales::percent(i/n)})"))
+
+# Combining with cli
+snippet gcli "Combine glue with cli styling"
+	cli::cli_alert_info(glue::glue("${1:Processing {.file {filename}}}"))
+
+snippet gcliabort "CLI abort with glue"
+	cli::cli_abort(glue::glue("${1:Failed to process {item}: {error}}"))
+
+# Environment Variables
+snippet genv "Interpolate environment variable"
+	glue::glue("${1:API Key: {Sys.getenv('API_KEY')}}")
+
+# Dates and Times
+snippet gdate "Format date in string"
+	glue::glue("${1:Report generated on {format(Sys.Date(), '%B %d, %Y')}}")
+
+snippet gtime "Format time in string"
+	glue::glue("${1:Last updated: {format(Sys.time(), '%Y-%m-%d %H:%M:%S')}}")
+
+# Complex Expressions
+snippet gexpr "Glue with complex expression"
+	glue::glue("${1:Result: {
+		x <- ${2:compute_value()}
+		round(x, ${3:2})
+	}}")
+
+# Debugging
+snippet gdebug "Debug variable with glue"
+	message(glue::glue("${1:DEBUG: {var_name} = {var_value} (type: {typeof(var_value)})}"))
+
+# Lists and Vectors
+snippet gvec "Format vector"
+	glue::glue("${1:Vector: [{glue::glue_collapse(vec, sep = ', ')}]}")
+
+snippet gnamed "Format named vector"
+	glue::glue_data(
+		data.frame(name = names(${1:vec}), value = ${1:vec}),
+		"${2:{name} = {value}}"
+	) |> glue::glue_collapse(sep = ", ")
+
+# Templating
+snippet gtemplate "Create template with glue"
+	${1:template} <- glue::glue("
+		Dear {name},
+
+		${2:Your order #{order_id} has been {status}.}
+
+		${3:Thank you for your business!}
+
+		Best regards,
+		{company}
+	", .trim = TRUE)
+
+# Escaping
+snippet gescape "Escape braces in glue"
+	glue::glue("${1:This {{is}} literal, but {this} interpolates}")
+
+# Empty Handling
+snippet gempty "Handle empty values"
+	glue::glue("${1:Value: {if(length(x) > 0) x else 'N/A'}}")

@@ -1,0 +1,260 @@
+# readr - Fast and Friendly Data Import/Export
+# ─────────────────────────────────────────────────────────────
+
+# Reading Files
+snippet rdcsv "Read CSV file"
+	readr::read_csv("${1:file.csv}")
+
+snippet rdcsv2 "Read CSV2 file (semicolon separated)"
+	readr::read_csv2("${1:file.csv}")
+
+snippet rdtsv "Read TSV file"
+	readr::read_tsv("${1:file.tsv}")
+
+snippet rddelim "Read delimited file"
+	readr::read_delim(
+		"${1:file.txt}",
+		delim = "${2:|}",
+		col_types = ${3:cols()}
+	)
+
+snippet rdfwf "Read fixed width file"
+	readr::read_fwf(
+		"${1:file.txt}",
+		col_positions = fwf_widths(c(${2:10, 8, 5}))
+	)
+
+snippet rdlog "Read log file"
+	readr::read_log("${1:file.log}")
+
+snippet rdtable "Read whitespace-separated file"
+	readr::read_table("${1:file.txt}")
+
+# Reading with Options
+snippet rdcsvopt "Read CSV with options"
+	readr::read_csv(
+		"${1:file.csv}",
+		col_types = ${2:cols()},
+		na = c("${3:NA}", "${4:}"),
+		skip = ${5:0},
+		n_max = ${6:Inf},
+		locale = locale(${7:encoding = "UTF-8"})
+	)
+
+snippet rdcoltypes "Specify column types"
+	readr::read_csv(
+		"${1:file.csv}",
+		col_types = cols(
+			${2:col1} = col_${3:double}(),
+			${4:col2} = col_${5:character}(),
+			.default = col_${6:guess}()
+		)
+	)
+
+snippet rdguess "Guess column types"
+	readr::guess_parser(c("${1:1}", "${2:2}", "${3:3}"))
+
+# Column Type Specifications
+snippet rdcoldouble "Specify double column"
+	col_double()
+
+snippet rdcolinteger "Specify integer column"
+	col_integer()
+
+snippet rdcolchar "Specify character column"
+	col_character()
+
+snippet rdcollogical "Specify logical column"
+	col_logical()
+
+snippet rdcoldate "Specify date column"
+	col_date(format = "${1:%Y-%m-%d}")
+
+snippet rdcoldatetime "Specify datetime column"
+	col_datetime(format = "${1:%Y-%m-%d %H:%M:%S}")
+
+snippet rdcoltime "Specify time column"
+	col_time(format = "${1:%H:%M:%S}")
+
+snippet rdcolfactor "Specify factor column"
+	col_factor(levels = c(${1:"level1", "level2"}))
+
+snippet rdcolskip "Skip column"
+	col_skip()
+
+snippet rdcolguess "Guess column type"
+	col_guess()
+
+# Writing Files
+snippet wrcsv "Write CSV file"
+	readr::write_csv(${1:data}, "${2:file.csv}")
+
+snippet wrcsv2 "Write CSV2 file (semicolon separated)"
+	readr::write_csv2(${1:data}, "${2:file.csv}")
+
+snippet wrtsv "Write TSV file"
+	readr::write_tsv(${1:data}, "${2:file.tsv}")
+
+snippet wrdelim "Write delimited file"
+	readr::write_delim(
+		${1:data},
+		"${2:file.txt}",
+		delim = "${3:|}"
+	)
+
+snippet wrexcel "Write Excel-compatible CSV"
+	readr::write_excel_csv(${1:data}, "${2:file.csv}")
+
+# Writing with Options
+snippet wrcsvopt "Write CSV with options"
+	readr::write_csv(
+		${1:data},
+		"${2:file.csv}",
+		na = "${3:}",
+		append = ${4:FALSE},
+		col_names = ${5:TRUE},
+		quote = "${6:needed}"
+	)
+
+# Reading from URLs/Connections
+snippet rdurl "Read from URL"
+	readr::read_csv("${1:https://example.com/data.csv}")
+
+snippet rdclip "Read from clipboard"
+	readr::read_delim(clipboard())
+
+# Reading Multiple Files
+snippet rdmulticsv "Read multiple CSV files"
+	${1:files} <- fs::dir_ls("${2:path}", glob = "${3:*.csv}")
+	${4:data} <- purrr::map_dfr(${1:files}, readr::read_csv, .id = "${5:source}")
+
+# Parsing Functions
+snippet rdparsenum "Parse number"
+	readr::parse_number("${1:$1,234.56}")
+
+snippet rdparsedate "Parse date"
+	readr::parse_date("${1:2024-01-15}", format = "${2:%Y-%m-%d}")
+
+snippet rdparsedatetime "Parse datetime"
+	readr::parse_datetime("${1:2024-01-15 14:30:00}")
+
+snippet rdparsetime "Parse time"
+	readr::parse_time("${1:14:30:00}")
+
+snippet rdparsedouble "Parse double"
+	readr::parse_double("${1:3.14}")
+
+snippet rdparseinteger "Parse integer"
+	readr::parse_integer("${1:42}")
+
+snippet rdparselogical "Parse logical"
+	readr::parse_logical("${1:TRUE}")
+
+snippet rdparsefactor "Parse factor"
+	readr::parse_factor(c("${1:a}", "${2:b}"), levels = c("${1:a}", "${2:b}", "${3:c}"))
+
+# Locale Settings
+snippet rdlocale "Set locale"
+	locale(
+		date_format = "${1:%Y-%m-%d}",
+		time_format = "${2:%H:%M:%S}",
+		decimal_mark = "${3:.}",
+		grouping_mark = "${4:,}",
+		encoding = "${5:UTF-8}"
+	)
+
+snippet rdlocaletz "Set locale with timezone"
+	locale(
+		tz = "${1:America/New_York}",
+		encoding = "${2:UTF-8}"
+	)
+
+# File Information
+snippet rdcountfields "Count fields in file"
+	readr::count_fields("${1:file.csv}", tokenizer_csv())
+
+snippet rdproblem "Show parsing problems"
+	${1:data} <- readr::read_csv("${2:file.csv}")
+	readr::problems(${1:data})
+
+# Tokenizers
+snippet rdtokencsv "CSV tokenizer"
+	tokenizer_csv()
+
+snippet rdtokentsv "TSV tokenizer"
+	tokenizer_tsv()
+
+snippet rdtokendelim "Delimited tokenizer"
+	tokenizer_delim(delim = "${1:|}")
+
+snippet rdtokenfwf "Fixed width tokenizer"
+	tokenizer_fwf(begin = c(${1:1, 10, 20}), end = c(${2:9, 19, 29}))
+
+# Reading Large Files
+snippet rdcsvchunk "Read CSV in chunks"
+	readr::read_csv_chunked(
+		"${1:file.csv}",
+		callback = DataFrameCallback$new(${2:function(x, pos) x}),
+		chunk_size = ${3:10000}
+	)
+
+snippet rdcsvsample "Read CSV sample"
+	readr::read_csv("${1:file.csv}", n_max = ${2:1000})
+
+# Fixed Width File Helpers
+snippet rdfwfwidth "Fixed width by widths"
+	fwf_widths(c(${1:10, 8, 5}), col_names = c("${2:col1}", "${3:col2}", "${4:col3}"))
+
+snippet rdfwfpos "Fixed width by positions"
+	fwf_positions(
+		start = c(${1:1, 11, 19}),
+		end = c(${2:10, 18, 24}),
+		col_names = c("${3:col1}", "${4:col2}", "${5:col3}")
+	)
+
+snippet rdfwfempty "Fixed width by empty columns"
+	fwf_empty("${1:file.txt}")
+
+# Writing RDS (R Data Serialization)
+snippet rdrds "Read RDS file"
+	readr::read_rds("${1:file.rds}")
+
+snippet wrrds "Write RDS file"
+	readr::write_rds(${1:data}, "${2:file.rds}", compress = "${3:gz}")
+
+# Type Conversion
+snippet rdtypconvert "Convert column types"
+	readr::type_convert(
+		${1:data},
+		col_types = cols(${2:col1} = col_${3:double}())
+	)
+
+# Common Patterns
+snippet rdquick "Quick CSV read"
+	${1:data} <- readr::read_csv("${2:file.csv}", show_col_types = FALSE)
+
+snippet rdimport "Import and clean data"
+	${1:data} <- readr::read_csv("${2:file.csv}") |>
+		dplyr::mutate(${3:col} = readr::parse_number(${3:col}))
+
+snippet rdexport "Export with timestamp"
+	${1:filename} <- paste0("${2:data}_", format(Sys.Date(), "%Y%m%d"), ".csv")
+	readr::write_csv(${3:data}, ${1:filename})
+
+# Encoding
+snippet rdlatin1 "Read Latin-1 encoded file"
+	readr::read_csv("${1:file.csv}", locale = locale(encoding = "Latin1"))
+
+snippet rdutf8 "Read UTF-8 encoded file"
+	readr::read_csv("${1:file.csv}", locale = locale(encoding = "UTF-8"))
+
+# Comments and Quotes
+snippet rdskipcomment "Skip comments in file"
+	readr::read_csv("${1:file.csv}", comment = "${2:#}")
+
+snippet rdquote "Specify quote character"
+	readr::read_csv("${1:file.csv}", quote = "${2:\"}")
+
+# Trimming Whitespace
+snippet rdtrim "Trim whitespace from fields"
+	readr::read_csv("${1:file.csv}", trim_ws = TRUE)

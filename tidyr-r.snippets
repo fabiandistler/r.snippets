@@ -1,0 +1,254 @@
+# tidyr - Data Reshaping and Tidying
+# ─────────────────────────────────────────────────────────────
+
+# Pivoting - Wide to Long
+snippet tdplong "Pivot longer (wide to long)"
+	tidyr::pivot_longer(
+		cols = ${1:col1:col3},
+		names_to = "${2:name}",
+		values_to = "${3:value}"
+	)
+
+snippet tdplongall "Pivot longer all except key columns"
+	tidyr::pivot_longer(
+		cols = -c(${1:id}),
+		names_to = "${2:variable}",
+		values_to = "${3:value}"
+	)
+
+snippet tdplongprefix "Pivot longer with name prefix"
+	tidyr::pivot_longer(
+		cols = ${1:starts_with("value_")},
+		names_to = "${2:year}",
+		names_prefix = "${3:value_}",
+		values_to = "${4:measurement}"
+	)
+
+snippet tdplongsep "Pivot longer with names separator"
+	tidyr::pivot_longer(
+		cols = ${1:col1:col3},
+		names_to = c("${2:var1}", "${3:var2}"),
+		names_sep = "${4:_}",
+		values_to = "${5:value}"
+	)
+
+# Pivoting - Long to Wide
+snippet tdpwide "Pivot wider (long to wide)"
+	tidyr::pivot_wider(
+		names_from = ${1:name},
+		values_from = ${2:value}
+	)
+
+snippet tdpwidefill "Pivot wider with fill value"
+	tidyr::pivot_wider(
+		names_from = ${1:name},
+		values_from = ${2:value},
+		values_fill = ${3:0}
+	)
+
+snippet tdpwidefn "Pivot wider with value function"
+	tidyr::pivot_wider(
+		names_from = ${1:name},
+		values_from = ${2:value},
+		values_fn = ${3:mean}
+	)
+
+snippet tdpwideprefix "Pivot wider with name prefix"
+	tidyr::pivot_wider(
+		names_from = ${1:category},
+		names_prefix = "${2:cat_}",
+		values_from = ${3:value}
+	)
+
+# Rectangling - Unnesting
+snippet tdunnest "Unnest list-column"
+	tidyr::unnest(${1:col})
+
+snippet tdunnestlong "Unnest longer (one row per element)"
+	tidyr::unnest_longer(${1:col})
+
+snippet tdunnestwide "Unnest wider (one column per element)"
+	tidyr::unnest_wider(${1:col})
+
+snippet tdunnestauto "Unnest auto (automatically choose)"
+	tidyr::unnest_auto(${1:col})
+
+snippet tdhoist "Hoist elements from nested lists"
+	tidyr::hoist(${1:data_col},
+		${2:new_col1} = "${3:path1}",
+		${4:new_col2} = "${5:path2}"
+	)
+
+# Nesting
+snippet tdnest "Nest data"
+	tidyr::nest(${1:data} = c(${2:col1, col2}))
+
+snippet tdnestall "Nest all except grouping"
+	tidyr::nest(${1:data} = -c(${2:group_col}))
+
+# Separate and Unite
+snippet tdsep "Separate column into multiple"
+	tidyr::separate(
+		col = ${1:combined},
+		into = c("${2:col1}", "${3:col2}"),
+		sep = "${4:_}"
+	)
+
+snippet tdsepwide "Separate into multiple columns wider"
+	tidyr::separate_wider_delim(
+		cols = ${1:col},
+		delim = "${2:_}",
+		names = c("${3:col1}", "${4:col2}")
+	)
+
+snippet tdseppos "Separate by position"
+	tidyr::separate_wider_position(
+		cols = ${1:col},
+		widths = c(${2:var1} = ${3:2}, ${4:var2} = ${5:4})
+	)
+
+snippet tdsepregex "Separate with regex"
+	tidyr::separate_wider_regex(
+		cols = ${1:col},
+		patterns = c(
+			${2:prefix} = "${3:[A-Z]+}",
+			"${4:-}",
+			${5:number} = "${6:\\d+}"
+		)
+	)
+
+snippet tdunite "Unite columns into one"
+	tidyr::unite(
+		col = "${1:combined}",
+		${2:col1}, ${3:col2},
+		sep = "${4:_}",
+		remove = ${5:TRUE}
+	)
+
+# Missing Values
+snippet tddropna "Drop rows with NA"
+	tidyr::drop_na(${1:col})
+
+snippet tdfillna "Fill NA with previous/next values"
+	tidyr::fill(${1:col}, .direction = "${2:down}")
+
+snippet tdreplna "Replace NA with value"
+	tidyr::replace_na(list(${1:col} = ${2:0}))
+
+# Completing Data
+snippet tdcomplete "Complete missing combinations"
+	tidyr::complete(${1:col1}, ${2:col2}, fill = list(${3:value} = ${4:0}))
+
+snippet tdexpand "Expand to all combinations"
+	tidyr::expand(${1:col1}, ${2:col2})
+
+snippet tdnesting "Get only observed combinations"
+	tidyr::expand(nesting(${1:col1}, ${2:col2}))
+
+snippet tdfull_seq "Complete sequence of values"
+	tidyr::complete(${1:year} = tidyr::full_seq(${1:year}, ${2:1}))
+
+# Expanding and Contracting
+snippet tdexpandgrid "Expand grid of values"
+	tidyr::expand_grid(
+		${1:var1} = ${2:1:10},
+		${3:var2} = c("${4:a}", "${5:b}")
+	)
+
+snippet tdcrossing "Crossing without duplicates"
+	tidyr::crossing(${1:col1}, ${2:col2})
+
+# Pack and Unpack
+snippet tdpack "Pack columns into data frame column"
+	tidyr::pack(${1:packed} = c(${2:col1, col2}))
+
+snippet tdunpack "Unpack data frame column"
+	tidyr::unpack(${1:packed})
+
+# Chopping
+snippet tdchop "Chop repeated values into list-column"
+	tidyr::chop(${1:col})
+
+snippet tdunchop "Unchop list-column to longer format"
+	tidyr::unchop(${1:col})
+
+# Duplicates
+snippet tdunique "Keep unique/distinct rows"
+	dplyr::distinct()
+
+# Common Patterns
+snippet tdwidetidy "Convert wide data to tidy"
+	${1:data} |>
+		tidyr::pivot_longer(
+			cols = -c(${2:id_cols}),
+			names_to = "${3:variable}",
+			values_to = "${4:value}"
+		) |>
+		tidyr::drop_na(${4:value})
+
+snippet tdtidywide "Convert tidy data to wide"
+	${1:data} |>
+		tidyr::pivot_wider(
+			names_from = ${2:category},
+			values_from = ${3:value},
+			values_fill = ${4:0}
+		)
+
+snippet tdsplitcol "Split column and keep original"
+	${1:data} |>
+		tidyr::separate(
+			col = ${2:combined},
+			into = c("${3:part1}", "${4:part2}"),
+			sep = "${5:_}",
+			remove = FALSE
+		)
+
+snippet tdnesteddata "Create nested data by group"
+	${1:data} |>
+		dplyr::group_by(${2:group_col}) |>
+		tidyr::nest()
+
+snippet tdunnestmodel "Unnest model results"
+	${1:data} |>
+		dplyr::mutate(${2:tidy} = purrr::map(${3:model}, broom::tidy)) |>
+		tidyr::unnest(${2:tidy})
+
+# Crossing with conditions
+snippet tdcondcomplete "Complete with conditions"
+	tidyr::complete(
+		${1:col1},
+		${2:col2},
+		fill = list(${3:value} = ${4:0})
+	) |>
+		dplyr::filter(${5:condition})
+
+# Working with JSON-like nested data
+snippet tdrectangle "Rectangle nested JSON-like data"
+	${1:data} |>
+		tidyr::unnest_wider(${2:col}) |>
+		tidyr::unnest_longer(${3:nested_col})
+
+# Time series patterns
+snippet tdfillts "Fill time series gaps"
+	${1:data} |>
+		tidyr::complete(
+			${2:date} = seq(min(${2:date}), max(${2:date}), by = "${3:1 day}")
+		) |>
+		tidyr::fill(${4:col}, .direction = "${5:down}")
+
+# Advanced pivoting
+snippet tdpivotmulti "Pivot with multiple value columns"
+	tidyr::pivot_longer(
+		cols = ${1:starts_with("val")},
+		names_to = c("${2:.value}", "${3:year}"),
+		names_sep = "${4:_}"
+	)
+
+snippet tdpivotspec "Pivot with custom specification"
+	${1:spec} <- tidyr::build_longer_spec(
+		${2:data},
+		cols = ${3:col1:col3},
+		names_to = "${4:name}",
+		values_to = "${5:value}"
+	)
+	tidyr::pivot_longer_spec(${2:data}, ${1:spec})

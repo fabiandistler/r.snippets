@@ -157,3 +157,175 @@ snippet tarsave "Save output pattern"
 		},
 		format = "file"
 	)
+
+# ─────────────────────────────────────────────────────────────
+# Metadata & Information
+snippet tarmeta "Get target metadata"
+	targets::tar_meta(names = ${1:NULL}, fields = ${2:NULL})
+
+snippet tarage "Get target timestamp/age"
+	targets::tar_meta(names = ${1:target_name}, fields = c("time", "seconds"))
+
+snippet tarnetwork "Network data for visualization"
+	targets::tar_network(names = ${1:NULL}, outdated = ${2:TRUE})
+
+snippet tarsiblings "Get target siblings"
+	targets::tar_sibling(${1:target_name})
+
+snippet tardeps "Show target dependencies"
+	targets::tar_deps(${1:target_name})
+
+snippet tarbranches "List dynamic branches"
+	targets::tar_branches(${1:target_name})
+
+# ─────────────────────────────────────────────────────────────
+# Timestamps and Caching
+snippet tarts "Get target timestamp"
+	targets::tar_timestamp(${1:target_name})
+
+snippet tarolder "Check if target older than"
+	targets::tar_older(${1:target_name}, ${2:time})
+
+snippet tarnewer "Check if target newer than"
+	targets::tar_newer(${1:target_name}, ${2:time})
+
+snippet tarcue "Show target cue (why outdated)"
+	targets::tar_cue(mode = "${1:thorough}", command = ${2:TRUE}, depend = ${3:TRUE})
+
+# ─────────────────────────────────────────────────────────────
+# Repository Management
+snippet tarpath "Get targets store path"
+	targets::tar_path_store()
+
+snippet tarexist "Check if target exists"
+	targets::tar_exist_objects(names = c(${1:"target_name"}))
+
+snippet tarpathtarget "Get path to target object"
+	targets::tar_path_target(${1:target_name})
+
+snippet tarconfig "Get targets configuration"
+	targets::tar_config_get("${1:store}")
+
+snippet tarscript "Get path to _targets.R"
+	targets::tar_config_get("script")
+
+# ─────────────────────────────────────────────────────────────
+# Parallel & Performance
+snippet taroptions "Set target options"
+	targets::tar_option_set(
+		packages = c(${1:"dplyr", "data.table"}),
+		format = "${2:qs}",
+		memory = "${3:transient}",
+		garbage_collection = ${4:TRUE},
+		deployment = "${5:main}",
+		priority = ${6:0}
+	)
+
+snippet tarresources "Set computing resources"
+	targets::tar_resources(
+		${1:qs} = targets::tar_resources_${1:qs}(preset = "${2:high}")
+	)
+
+snippet tarformat "Common storage formats"
+	format = "${1:qs|rds|fst|fst_dt|fst_tbl|keras|torch|file}"
+
+snippet tarmemory "Memory settings"
+	memory = "${1:persistent|transient}"
+
+snippet tardeploy "Deployment settings"
+	deployment = "${1:main|worker}"
+
+# ─────────────────────────────────────────────────────────────
+# Error Handling
+snippet tarerror "Set error mode"
+	targets::tar_option_set(error = "${1:stop}")
+
+snippet tarworkload "Show workload summary"
+	targets::tar_workload()
+
+snippet tarnames "List all target names"
+	targets::tar_names()
+
+snippet tarcompletednames "List completed targets"
+	targets::tar_completed(names = ${1:NULL})
+
+snippet tarcanceled "List canceled targets"
+	targets::tar_canceled(names = ${1:NULL})
+
+snippet tarerrored "List errored targets"
+	targets::tar_errored(names = ${1:NULL})
+
+# ─────────────────────────────────────────────────────────────
+# Advanced Patterns
+snippet tarpattern "Create pattern with crossmap"
+	targets::tar_target(
+		name = ${1:results},
+		command = ${2:analyze}(${3:data}, ${4:param}),
+		pattern = cross(${3:data}, ${4:param})
+	)
+
+snippet tarhead "Get first elements of branches"
+	targets::tar_target(
+		name = ${1:sample},
+		command = head(${2:data}, ${3:100}),
+		pattern = head(${2:data}, n = ${4:5})
+	)
+
+snippet tartail "Get last elements of branches"
+	targets::tar_target(
+		name = ${1:sample},
+		command = tail(${2:data}, ${3:100}),
+		pattern = tail(${2:data}, n = ${4:5})
+	)
+
+snippet tarsample "Sample branches"
+	targets::tar_target(
+		name = ${1:sample},
+		command = ${2:data},
+		pattern = sample(${2:data}, size = ${3:10})
+	)
+
+# ─────────────────────────────────────────────────────────────
+# Reporting
+snippet tarreport "Generate target report"
+	targets::tar_report(fields = ${1:NULL}, path_store = targets::tar_path_store())
+
+snippet tarwatch "Watch pipeline in browser"
+	targets::tar_watch(
+		seconds = ${1:10},
+		outdated = ${2:TRUE},
+		targets_only = ${3:TRUE}
+	)
+
+snippet targlimpse "Quick pipeline overview"
+	targets::tar_glimpse()
+
+# ─────────────────────────────────────────────────────────────
+# Testing & Validation
+snippet tarvalidate "Validate _targets.R"
+	targets::tar_validate()
+
+snippet tartest "Test target interactively"
+	targets::tar_make(names = ${1:target_name}, callr_function = NULL)
+
+# ─────────────────────────────────────────────────────────────
+# Branching Helpers (tarchetypes)
+snippet tarrepbatch "Replicate with batching"
+	tarchetypes::tar_rep(
+		name = ${1:sim},
+		command = ${2:simulate()},
+		batches = ${3:10},
+		reps = ${4:100}
+	)
+
+snippet tarfiles "Track multiple input files"
+	tarchetypes::tar_files(
+		name = ${1:input_files},
+		command = list.files("${2:data}", full.names = TRUE)
+	)
+
+snippet tarformat2 "Multiple formats for same target"
+	tarchetypes::tar_format_feather(
+		name = ${1:data},
+		command = ${2:read_data()}
+	)
